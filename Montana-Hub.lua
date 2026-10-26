@@ -1,4 +1,4 @@
--- Montano Hub | Fully Fixed Version (Wallhack, Settings, Radio, Custom FOV & Crosshair)
+-- Montano Hub | Cinematic Loader & Full Hub Integration
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local SoundService = game:GetService("SoundService")
@@ -7,7 +7,7 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- Экран загрузки / Заставка
+-- Кастомная заставка
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "MontanoLoader"
 ScreenGui.IgnoreGuiInset = true
@@ -29,6 +29,16 @@ Title.Font = Enum.Font.GothamBold
 Title.BackgroundTransparency = 1
 Title.Parent = Frame
 
+local Subtitle = Instance.new("TextLabel")
+Subtitle.Size = UDim2.new(0, 400, 0, 30)
+Subtitle.Position = UDim2.new(0.5, -200, 0.4, 10)
+Subtitle.Text = "Welcome, " .. LocalPlayer.Name .. "!"
+Subtitle.TextColor3 = Color3.fromRGB(0, 255, 128)
+Subtitle.TextSize = 18
+Subtitle.Font = Enum.Font.Gotham
+Subtitle.BackgroundTransparency = 1
+Subtitle.Parent = Frame
+
 local ConfirmBtn = Instance.new("TextButton")
 ConfirmBtn.Size = UDim2.new(0, 220, 0, 50)
 ConfirmBtn.Position = UDim2.new(0.5, -110, 0.55, 0)
@@ -43,7 +53,7 @@ local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 8)
 UICorner.Parent = ConfirmBtn
 
--- Стартовый звук
+-- Проигрывание звука
 local Sound = Instance.new("Sound")
 Sound.SoundId = "rbxassetid://111646190557344"
 Sound.Volume = 2
@@ -54,6 +64,7 @@ local function LoadHub()
     ScreenGui:Destroy()
     Sound:Destroy()
     
+    -- Инициализация самого хаба
     local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
     if not _G.MontanoSettings then
@@ -61,6 +72,7 @@ local function LoadHub()
             CurrentLang = "RU",
             CurrentTheme = "Default",
             AimbotEnabled = false,
+            AimMode = "Аимбот",
             Wallhack = true,
             WallCheck = false,
             FOV = 150,
@@ -76,46 +88,145 @@ local function LoadHub()
             InfJump = false,
             Noclip = false,
             AntiAFK = true,
-            CameraFOV = 70,
-            EnableCustomFOV = false,
-            CrosshairEnabled = true,
-            CrosshairStyle = "Крестик",
-            CrosshairColor = Color3.fromRGB(255, 0, 0),
-            CrosshairSize = 10,
-            CrosshairGap = 3
+            SelectedTrollTarget = nil,
+            TrollingActive = false
         }
     end
 
     local Settings = _G.MontanoSettings
 
+    local Locales = {
+        RU = {
+            WindowTitle = "Montano Hub",
+            Loading = "Загрузка Montano Hub...",
+            TabCombat = "Бой",
+            TabVisuals = "Визуал",
+            TabMovement = "Движение",
+            TabTroll = "Троллинг",
+            TabRadio = "Радио",
+            TabSettings = "Настройки",
+            ToggleAimbot = "Включить Аимбот",
+            WallCheck = "Проверка стен (Игнорить за стеной)",
+            ModeLabel = "Режим работы",
+            ModeAimbot = "Аимбот",
+            ModeSilent = "Сайлент Аим (Временно не работает)",
+            TargetPart = "Часть тела для прицела",
+            AimType = "Тип наводки",
+            AimSmooth = "Плавный",
+            AimSnap = "Резкий (Моментальный)",
+            Smoothness = "Плавность наводки",
+            FOVSize = "Размер круга FOV",
+            ShowFOVToggle = "Отображать круг FOV",
+            FOVColorLabel = "Цвет круга FOV",
+            Wallhack = "Валхак (Подсветка через стены)",
+            SpeedToggle = "Включить Speedhack",
+            SpeedSlider = "Скорость бега",
+            JumpToggle = "Включить высокий прыжок",
+            JumpSlider = "Сила прыжка",
+            InfJumpToggle = "Бесконечный прыжок",
+            NoclipToggle = "Проход сквозь стены (Noclip)",
+            TrollSelect = "Выбрать игрока для троллинга",
+            TrollToggle = "Флинг (С возвратом на место)",
+            RadioID = "Код музыки (Audio ID)",
+            RadioPlay = "Воспроизведение музыки",
+            RadioVol = "Громкость музыки",
+            LangLabel = "Выбор языка",
+            ThemeLabel = "Выбор темы",
+            ApplyBtn = "Применить изменения (Перезапуск UI)"
+        },
+        UA = {
+            WindowTitle = "Montano Hub",
+            Loading = "Завантаження Montano Hub...",
+            TabCombat = "Бій",
+            TabVisuals = "Візуал",
+            TabMovement = "Рух",
+            TabTroll = "Тролінг",
+            TabRadio = "Радіо",
+            TabSettings = "Налаштування",
+            ToggleAimbot = "Увімкнути Аімбот",
+            WallCheck = "Перевірка стін (Ігнорувати за стіною)",
+            ModeLabel = "Режим роботи",
+            ModeAimbot = "Аімбот",
+            ModeSilent = "Сайлент Аім (Тимчасово не працює)",
+            TargetPart = "Частина тіла для прицілу",
+            AimType = "Тип наведення",
+            AimSmooth = "Плавний",
+            AimSnap = "Різкий (Моментальний)",
+            Smoothness = "Плавність наведення",
+            FOVSize = "Розмір кола FOV",
+            ShowFOVToggle = "Відображати коло FOV",
+            FOVColorLabel = "Колір кола FOV",
+            Wallhack = "Валхак (Підсвічування крізь стіни)",
+            SpeedToggle = "Увімкнути Speedhack",
+            SpeedSlider = "Швидкість бігу",
+            JumpToggle = "Увімкнути високий стрибок",
+            JumpSlider = "Сила стрибка",
+            InfJumpToggle = "Нескінченний стрибок",
+            NoclipToggle = "Прохід крізь стіни (Noclip)",
+            TrollSelect = "Вибрати гравця для тролінгу",
+            TrollToggle = "Флінг (З поверненням на місце)",
+            RadioID = "Код музики (Audio ID)",
+            RadioPlay = "Відтворення музики",
+            RadioVol = "Гучність музики",
+            LangLabel = "Вибір мови",
+            ThemeLabel = "Вибір теми",
+            ApplyBtn = "Застосувати зміни (Перезапуск UI)"
+        },
+        EN = {
+            WindowTitle = "Montano Hub",
+            Loading = "Loading Montano Hub...",
+            TabCombat = "Combat",
+            TabVisuals = "Visuals",
+            TabMovement = "Movement",
+            TabTroll = "Trolling",
+            TabRadio = "Radio",
+            TabSettings = "Settings",
+            ToggleAimbot = "Enable Aimbot",
+            WallCheck = "Wall Check (Ignore behind wall)",
+            ModeLabel = "Mode",
+            ModeAimbot = "Aimbot",
+            ModeSilent = "Silent Aim (Temporarily broken)",
+            TargetPart = "Target Bone",
+            AimType = "Aim Type",
+            AimSmooth = "Smooth",
+            AimSnap = "Snap",
+            Smoothness = "Aim Smoothness",
+            FOVSize = "FOV Circle Size",
+            ShowFOVToggle = "Show FOV Circle",
+            FOVColorLabel = "FOV Circle Color",
+            Wallhack = "Wallhack (Chams)",
+            SpeedToggle = "Enable Speedhack",
+            SpeedSlider = "Walk Speed",
+            JumpToggle = "Enable High Jump",
+            JumpSlider = "Jump Power",
+            InfJumpToggle = "Infinite Jump",
+            NoclipToggle = "Noclip (Through Walls)",
+            TrollSelect = "Select Player to Troll",
+            TrollToggle = "Fling (With return position)",
+            RadioID = "Music ID (Audio ID)",
+            RadioPlay = "Play Music",
+            RadioVol = "Music Volume",
+            LangLabel = "Language Selection",
+            ThemeLabel = "Theme Selection",
+            ApplyBtn = "Apply Changes (Reload UI)"
+        }
+    }
+
+    local T = Locales[Settings.CurrentLang]
+
     local Window = Rayfield:CreateWindow({
-       Name = "Montano Hub",
-       LoadingTitle = "Загрузка...",
+       Name = T.WindowTitle,
+       LoadingTitle = T.Loading,
        ConfigurationSaving = { Enabled = false },
        KeySystem = false,
        Theme = Settings.CurrentTheme
     })
 
-    -- Радио
     local RadioSound = SoundService:FindFirstChild("MontanoRadio") or Instance.new("Sound")
     RadioSound.Name = "MontanoRadio"
     RadioSound.Volume = 1
     RadioSound.Looped = true
     RadioSound.Parent = SoundService
-
-    -- Прицел (Drawing API)
-    local CrosshairLines = {
-        Top = Drawing.new("Line"),
-        Bottom = Drawing.new("Line"),
-        Left = Drawing.new("Line"),
-        Right = Drawing.new("Line"),
-        CenterDot = Drawing.new("Circle")
-    }
-
-    for _, line in pairs(CrosshairLines) do
-        if line.Thickness then line.Thickness = 1.5 end
-        line.Visible = false
-    end
 
     local FOVCircle = _G.MontanoFOV or Drawing.new("Circle")
     _G.MontanoFOV = FOVCircle
@@ -125,58 +236,62 @@ local function LoadHub()
     FOVCircle.Transparency = 0.7
     FOVCircle.NumSides = 32
 
-    -- Вкладка: Бой
-    local CombatTab = Window:CreateTab("Бой", 4483362458)
-    CombatTab:CreateToggle({Name = "Включить Аимбот", CurrentValue = Settings.AimbotEnabled, Callback = function(Value) Settings.AimbotEnabled = Value end})
-    CombatTab:CreateToggle({Name = "Проверка стен", CurrentValue = Settings.WallCheck, Callback = function(Value) Settings.WallCheck = Value end})
-    CombatTab:CreateSlider({Name = "Плавность наводки", Range = {1, 20}, Increment = 1, Suffix = "", CurrentValue = Settings.Smoothness, Callback = function(Value) Settings.Smoothness = Value end})
-    CombatTab:CreateSlider({Name = "Размер круга FOV Аима", Range = {50, 400}, Increment = 10, Suffix = " px", CurrentValue = Settings.FOV, Callback = function(Value) Settings.FOV = Value; FOVCircle.Radius = Value end})
+    local CombatTab = Window:CreateTab(T.TabCombat, 4483362458)
+    CombatTab:CreateToggle({Name = T.ToggleAimbot, CurrentValue = Settings.AimbotEnabled, Callback = function(Value) Settings.AimbotEnabled = Value end})
+    CombatTab:CreateToggle({Name = T.WallCheck, CurrentValue = Settings.WallCheck, Callback = function(Value) Settings.WallCheck = Value end})
 
-    -- Вкладка: Визуал
-    local VisualsTab = Window:CreateTab("Визуал", 4483362458)
-    VisualsTab:CreateToggle({Name = "Валхак (Wallhack)", CurrentValue = Settings.Wallhack, Callback = function(Value) Settings.Wallhack = Value end})
-    VisualsTab:CreateToggle({Name = "Отображать круг FOV Аима", CurrentValue = Settings.ShowFOV, Callback = function(Value) Settings.ShowFOV = Value end})
-
-    VisualsTab:CreateSection("Угол обзора (Custom FOV)")
-    VisualsTab:CreateToggle({Name = "Включить Кастомный FOV", CurrentValue = Settings.EnableCustomFOV, Callback = function(Value) Settings.EnableCustomFOV = Value end})
-    VisualsTab:CreateSlider({Name = "Угол обзора Камеры", Range = {70, 120}, Increment = 1, Suffix = "°", CurrentValue = Settings.CameraFOV, Callback = function(Value) Settings.CameraFOV = Value end})
-
-    VisualsTab:CreateSection("Кастомный Прицел (Crosshair)")
-    VisualsTab:CreateToggle({Name = "Включить Прицел", CurrentValue = Settings.CrosshairEnabled, Callback = function(Value) Settings.CrosshairEnabled = Value end})
-    VisualsTab:CreateDropdown({Name = "Стиль прицела", Options = {"Крестик", "Точка"}, CurrentOption = {Settings.CrosshairStyle}, Callback = function(Option) Settings.CrosshairStyle = Option[1] end})
-    VisualsTab:CreateDropdown({Name = "Цвет прицела", Options = {"Красный", "Зеленый", "Голубой", "Желтый", "Белый"}, CurrentOption = {"Красный"}, Callback = function(Option)
-        local c = Option[1]
-        if c == "Красный" then Settings.CrosshairColor = Color3.fromRGB(255, 0, 0)
-        elseif c == "Зеленый" then Settings.CrosshairColor = Color3.fromRGB(0, 255, 0)
-        elseif c == "Голубой" then Settings.CrosshairColor = Color3.fromRGB(0, 200, 255)
-        elseif c == "Желтый" then Settings.CrosshairColor = Color3.fromRGB(255, 255, 0)
-        else Settings.CrosshairColor = Color3.fromRGB(255, 255, 255) end
+    CombatTab:CreateDropdown({Name = T.ModeLabel, Options = {T.ModeAimbot, T.ModeSilent}, CurrentOption = {T.ModeAimbot}, Callback = function(Option)
+        if Option[1]:find("Сайлент") or Option[1]:find("Silent") then Settings.AimMode = "Сайлент Аим" else Settings.AimMode = "Аимбот" end
     end})
-    VisualsTab:CreateSlider({Name = "Размер прицела", Range = {4, 25}, Increment = 1, Suffix = "px", CurrentValue = Settings.CrosshairSize, Callback = function(Value) Settings.CrosshairSize = Value end})
+    CombatTab:CreateDropdown({Name = T.TargetPart, Options = {"Голова", "Торс (Грудь)", "Левая нога", "Правая нога"}, CurrentOption = {"Голова"}, Callback = function(Option)
+        local selected = Option[1]
+        if selected == "Голова" then Settings.TargetPart = "Head"
+        elseif selected == "Торс (Грудь)" then Settings.TargetPart = "HumanoidRootPart"
+        elseif selected == "Левая нога" then Settings.TargetPart = "Left Leg"
+        elseif selected == "Правая нога" then Settings.TargetPart = "Right Leg" end
+    end})
+    CombatTab:CreateDropdown({Name = T.AimType, Options = {T.AimSmooth, T.AimSnap}, CurrentOption = {Settings.AimType == "Snap" and T.AimSnap or T.AimSmooth}, Callback = function(Option)
+        if Option[1]:find("Резкий") or Option[1]:find("Snap") or Option[1]:find("Різкий") then Settings.AimType = "Snap" else Settings.AimType = "Smooth" end
+    end})
+    CombatTab:CreateSlider({Name = T.Smoothness, Range = {1, 20}, Increment = 1, Suffix = " шаг", CurrentValue = Settings.Smoothness, Callback = function(Value) Settings.Smoothness = Value end})
+    CombatTab:CreateSlider({Name = T.FOVSize, Range = {50, 400}, Increment = 10, Suffix = " px", CurrentValue = Settings.FOV, Callback = function(Value) Settings.FOV = Value; FOVCircle.Radius = Value end})
 
-    -- Вкладка: Движение
-    local MovementTab = Window:CreateTab("Движение", 4483362458)
-    MovementTab:CreateToggle({Name = "Включить Speedhack", CurrentValue = Settings.SpeedHackEnabled, Callback = function(Value) Settings.SpeedHackEnabled = Value end})
-    MovementTab:CreateSlider({Name = "Скорость бега", Range = {16, 200}, Increment = 2, Suffix = "", CurrentValue = Settings.WalkSpeed, Callback = function(Value) Settings.WalkSpeed = Value end})
-    MovementTab:CreateToggle({Name = "Проход сквозь стены (Noclip)", CurrentValue = Settings.Noclip, Callback = function(Value) Settings.Noclip = Value end})
+    local VisualsTab = Window:CreateTab(T.TabVisuals, 4483362458)
+    VisualsTab:CreateToggle({Name = T.Wallhack, CurrentValue = Settings.Wallhack, Callback = function(Value) Settings.Wallhack = Value end})
+    VisualsTab:CreateToggle({Name = T.ShowFOVToggle, CurrentValue = Settings.ShowFOV, Callback = function(Value) Settings.ShowFOV = Value end})
+    VisualsTab:CreateDropdown({Name = T.FOVColorLabel, Options = {"Белый", "Красный", "Зеленый", "Голубой", "Желтый"}, CurrentOption = {"Белый"}, Callback = function(Option)
+        local c = Option[1]
+        if c == "Красный" then Settings.FOVColor = Color3.fromRGB(255, 0, 0)
+        elseif c == "Зеленый" then Settings.FOVColor = Color3.fromRGB(0, 255, 0)
+        elseif c == "Голубой" then Settings.FOVColor = Color3.fromRGB(0, 200, 255)
+        elseif c == "Желтый" then Settings.FOVColor = Color3.fromRGB(255, 255, 0)
+        else Settings.FOVColor = Color3.fromRGB(255, 255, 255) end
+        FOVCircle.Color = Settings.FOVColor
+    end})
 
-    -- Вкладка: Радио
-    local MusicTab = Window:CreateTab("Радио", 4483362458)
-    MusicTab:CreateInput({Name = "Код музыки (Audio ID)", PlaceholderText = "Введите ID...", RemoveTextAfterFocusLost = false, Callback = function(Text)
+    local MovementTab = Window:CreateTab(T.TabMovement, 4483362458)
+    MovementTab:CreateToggle({Name = T.SpeedToggle, CurrentValue = Settings.SpeedHackEnabled, Callback = function(Value) Settings.SpeedHackEnabled = Value end})
+    MovementTab:CreateSlider({Name = T.SpeedSlider, Range = {16, 200}, Increment = 2, Suffix = " speed", CurrentValue = Settings.WalkSpeed, Callback = function(Value) Settings.WalkSpeed = Value end})
+    MovementTab:CreateToggle({Name = T.JumpToggle, CurrentValue = Settings.JumpHackEnabled, Callback = function(Value) Settings.JumpHackEnabled = Value end})
+    MovementTab:CreateSlider({Name = T.JumpSlider, Range = {50, 300}, Increment = 5, Suffix = " power", CurrentValue = Settings.JumpPower, Callback = function(Value) Settings.JumpPower = Value end})
+    MovementTab:CreateToggle({Name = T.InfJumpToggle, CurrentValue = Settings.InfJump, Callback = function(Value) Settings.InfJump = Value end})
+    MovementTab:CreateToggle({Name = T.NoclipToggle, CurrentValue = Settings.Noclip, Callback = function(Value) Settings.Noclip = Value end})
+
+    local MusicTab = Window:CreateTab(T.TabRadio, 4483362458)
+    MusicTab:CreateInput({Name = T.RadioID, PlaceholderText = "Введите ID трека...", RemoveTextAfterFocusLost = false, Callback = function(Text)
         local MusicID = tonumber(Text)
         if MusicID then RadioSound.SoundId = "rbxassetid://" .. tostring(MusicID); RadioSound:Play() end
     end})
-    MusicTab:CreateToggle({Name = "Воспроизведение музыки", CurrentValue = RadioSound.IsPlaying, Callback = function(Value)
+    MusicTab:CreateToggle({Name = T.RadioPlay, CurrentValue = RadioSound.IsPlaying, Callback = function(Value)
         if Value then RadioSound:Resume() else RadioSound:Pause() end
     end})
-    MusicTab:CreateSlider({Name = "Громкость музыки", Range = {0, 10}, Increment = 1, Suffix = "", CurrentValue = math.floor(RadioSound.Volume * 5), Callback = function(Value) RadioSound.Volume = Value / 5 end})
+    MusicTab:CreateSlider({Name = T.RadioVol, Range = {0, 10}, Increment = 1, Suffix = "", CurrentValue = math.floor(RadioSound.Volume * 5), Callback = function(Value) RadioSound.Volume = Value / 5 end})
 
-    -- Вкладка: Настройки
-    local SettingsTab = Window:CreateTab("Настройки", 4483362458)
-    SettingsTab:CreateDropdown({Name = "Выбор языка", Options = {"Русский", "Українська", "English"}, CurrentOption = {Settings.CurrentLang == "UA" and "Українська" or (Settings.CurrentLang == "EN" and "English" or "Русский")}, Callback = function(Option)
+    local SettingsTab = Window:CreateTab(T.TabSettings, 4483362458)
+    SettingsTab:CreateDropdown({Name = T.LangLabel, Options = {"Русский", "Українська", "English"}, CurrentOption = {Settings.CurrentLang == "UA" and "Українська" or (Settings.CurrentLang == "EN" and "English" or "Русский")}, Callback = function(Option)
         if Option[1] == "Українська" then Settings.CurrentLang = "UA" elseif Option[1] == "English" then Settings.CurrentLang = "EN" else Settings.CurrentLang = "RU" end
     end})
-    SettingsTab:CreateDropdown({Name = "Выбор темы", Options = {"Темная (Default)", "Светлая (Light)", "Серая (Serenity)", "Синяя (DarkBlue)", "Фиолетовая (Amethyst)"}, CurrentOption = {"Темная (Default)"}, Callback = function(Option)
+    SettingsTab:CreateDropdown({Name = T.ThemeLabel, Options = {"Темная (Default)", "Светлая (Light)", "Серая (Serenity)", "Синяя (DarkBlue)", "Фиолетовая (Amethyst)"}, CurrentOption = {"Темная (Default)"}, Callback = function(Option)
         local themeName = Option[1]
         if themeName:find("Светлая") or themeName:find("Light") then Settings.CurrentTheme = "Light"
         elseif themeName:find("Серая") or themeName:find("Serenity") then Settings.CurrentTheme = "Serenity"
@@ -184,13 +299,25 @@ local function LoadHub()
         elseif themeName:find("Фиолетовая") or themeName:find("Amethyst") then Settings.CurrentTheme = "Amethyst"
         else Settings.CurrentTheme = "Default" end
     end})
-    SettingsTab:CreateButton({Name = "Перезапустить UI", Callback = function()
+    SettingsTab:CreateButton({Name = T.ApplyBtn, Callback = function()
         Rayfield:Destroy()
-        task.wait(0.2)
-        LoadHub()
     end})
 
-    -- Логика Аимбота
+    UserInputService.JumpRequest:Connect(function()
+        if Settings.InfJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+        end
+    end)
+
+    local VirtualUser = game:GetService("VirtualUser")
+    LocalPlayer.Idled:Connect(function()
+        if Settings.AntiAFK then
+            VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+            task.wait(1)
+            VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+        end
+    end)
+
     local function IsVisible(part)
         if not Settings.WallCheck then return true end
         local parts = Camera:GetPartsObscuringTarget({part.Position}, {LocalPlayer.Character, part.Parent})
@@ -217,98 +344,50 @@ local function LoadHub()
         return Closest
     end
 
-    -- Надежный Wallhack (Highlight)
-    local function ApplyWallhack(v)
-        if v ~= LocalPlayer and v.Character then
-            local hl = v.Character:FindFirstChild("MontanoHighlight")
-            if Settings.Wallhack then
-                if not hl then
-                    hl = Instance.new("Highlight")
-                    hl.Name = "MontanoHighlight"
-                    hl.FillColor = Color3.fromRGB(255, 0, 0)
-                    hl.OutlineColor = Color3.fromRGB(255, 255, 255)
-                    hl.FillTransparency = 0.5
-                    hl.OutlineTransparency = 0
-                    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-                    hl.Parent = v.Character
-                end
-            else
-                if hl then hl:Destroy() end
-            end
-        end
-    end
-
-    -- Подключение к новым игрокам для Wallhack
-    for _, v in pairs(Players:GetPlayers()) do
-        ApplyWallhack(v)
-        v.CharacterAdded:Connect(function()
-            task.wait(0.5)
-            ApplyWallhack(v)
-        end)
-    end
-    Players.PlayerAdded:Connect(function(v)
-        v.CharacterAdded:Connect(function()
-            task.wait(0.5)
-            ApplyWallhack(v)
-        end)
-    end)
-
-    -- Главный цикл
     if _G.MontanoConnection then _G.MontanoConnection:Disconnect() end
 
     _G.MontanoConnection = RunService.RenderStepped:Connect(function()
-        if Settings.EnableCustomFOV then Camera.FieldOfView = Settings.CameraFOV end
-
-        -- Проверка Wallhack для всех
-        for _, v in pairs(Players:GetPlayers()) do
-            ApplyWallhack(v)
-        end
-
-        -- Спидхак
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-            if Settings.SpeedHackEnabled then
-                LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = Settings.WalkSpeed
-            end
-        end
-
-        -- Прицел
-        local Center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-        if Settings.CrosshairEnabled then
-            local color = Settings.CrosshairColor
-            local size = Settings.CrosshairSize
-            local gap = Settings.CrosshairGap
-
-            if Settings.CrosshairStyle == "Крестик" then
-                CrosshairLines.Top.Visible = true; CrosshairLines.Top.From = Center - Vector2.new(0, gap); CrosshairLines.Top.To = Center - Vector2.new(0, gap + size); CrosshairLines.Top.Color = color
-                CrosshairLines.Bottom.Visible = true; CrosshairLines.Bottom.From = Center + Vector2.new(0, gap); CrosshairLines.Bottom.To = Center + Vector2.new(0, gap + size); CrosshairLines.Bottom.Color = color
-                CrosshairLines.Left.Visible = true; CrosshairLines.Left.From = Center - Vector2.new(gap, 0); CrosshairLines.Left.To = Center - Vector2.new(gap + size, 0); CrosshairLines.Left.Color = color
-                CrosshairLines.Right.Visible = true; CrosshairLines.Right.From = Center + Vector2.new(gap, 0); CrosshairLines.Right.To = Center + Vector2.new(gap + size, 0); CrosshairLines.Right.Color = color
-                CrosshairLines.CenterDot.Visible = false
-            elseif Settings.CrosshairStyle == "Точка" then
-                for k, v in pairs(CrosshairLines) do v.Visible = false end
-                CrosshairLines.CenterDot.Visible = true
-                CrosshairLines.CenterDot.Position = Center
-                CrosshairLines.CenterDot.Radius = size / 3
-                CrosshairLines.CenterDot.Color = color
-                CrosshairLines.CenterDot.Filled = true
-            end
-        else
-            for k, v in pairs(CrosshairLines) do v.Visible = false end
-        end
-
-        FOVCircle.Position = Center
+        FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
         FOVCircle.Visible = Settings.AimbotEnabled and Settings.ShowFOV
 
-        if Settings.AimbotEnabled then
-            local Target = GetClosestTarget()
-            if Target then
-                Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, Target.Position), 1 / Settings.Smoothness)
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if Settings.SpeedHackEnabled then hum.WalkSpeed = Settings.WalkSpeed end
+            if Settings.JumpHackEnabled then hum.UseJumpPower = true; hum.JumpPower = Settings.JumpPower end
+        end
+
+        if Settings.Noclip then
+            if LocalPlayer.Character then
+                for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then part.CanCollide = false end
+                end
             end
         end
 
-        if Settings.Noclip and LocalPlayer.Character then
-            for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
-                if part:IsA("BasePart") then part.CanCollide = false end
+        if Settings.AimbotEnabled and Settings.AimMode == "Аимбот" then
+            local Target = GetClosestTarget()
+            if Target then
+                local TargetCFrame = CFrame.new(Camera.CFrame.Position, Target.Position)
+                if Settings.AimType == "Snap" then Camera.CFrame = TargetCFrame else Camera.CFrame = Camera.CFrame:Lerp(TargetCFrame, 1 / Settings.Smoothness) end
+            end
+        end
+
+        for _, v in pairs(Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character then
+                local Highlight = v.Character:FindFirstChild("HubHighlight")
+                if Settings.Wallhack then
+                    if not Highlight then
+                        Highlight = Instance.new("Highlight")
+                        Highlight.Name = "HubHighlight"
+                        Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                        Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                        Highlight.FillTransparency = 0.5
+                        Highlight.OutlineTransparency = 0
+                        Highlight.Parent = v.Character
+                    end
+                else
+                    if Highlight then Highlight:Destroy() end
+                end
             end
         end
     end)
