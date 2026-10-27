@@ -99,12 +99,17 @@ local function LoadHub()
         RU = {
             WindowTitle = "Montano Hub",
             Loading = "Загрузка Montano Hub...",
+            TabHome = "Главная",
             TabCombat = "Бой",
             TabVisuals = "Визуал",
             TabMovement = "Движение",
             TabTroll = "Троллинг",
             TabRadio = "Радио",
             TabSettings = "Настройки",
+            HomeSection = "Информация о проекте",
+            VersionInfo = "Montano Hub\nТекущая версия: v0.8.9 (БЕТА)\nОфициальный Telegram: https://t.me/Montanahub123",
+            CopyTgBtn = "📋 Скопировать ссылку на Telegram",
+            CopyNotify = "Ссылка на Telegram-канал скопирована в буфер обмена!",
             ToggleAimbot = "Включить Аимбот",
             WallCheck = "Проверка стен (Игнорить за стеной)",
             ModeLabel = "Режим работы",
@@ -137,12 +142,17 @@ local function LoadHub()
         UA = {
             WindowTitle = "Montano Hub",
             Loading = "Завантаження Montano Hub...",
+            TabHome = "Головна",
             TabCombat = "Бій",
             TabVisuals = "Візуал",
             TabMovement = "Рух",
             TabTroll = "Тролінг",
             TabRadio = "Радіо",
             TabSettings = "Налаштування",
+            HomeSection = "Інформація про проєкт",
+            VersionInfo = "Montano Hub\nПоточна версія: v0.8.9 (БЕТА)\nОфіційний Telegram: https://t.me/Montanahub123",
+            CopyTgBtn = "📋 Скопіювати посилання на Telegram",
+            CopyNotify = "Посилання на Telegram-канал скопійовано!",
             ToggleAimbot = "Увімкнути Аімбот",
             WallCheck = "Перевірка стін (Ігнорувати за стіною)",
             ModeLabel = "Режим роботи",
@@ -175,12 +185,17 @@ local function LoadHub()
         EN = {
             WindowTitle = "Montano Hub",
             Loading = "Loading Montano Hub...",
+            TabHome = "Home",
             TabCombat = "Combat",
             TabVisuals = "Visuals",
             TabMovement = "Movement",
             TabTroll = "Trolling",
             TabRadio = "Radio",
             TabSettings = "Settings",
+            HomeSection = "Project Information",
+            VersionInfo = "Montano Hub\nCurrent Version: v0.8.9 (BETA)\nOfficial Telegram: https://t.me/Montanahub123",
+            CopyTgBtn = "📋 Copy Telegram Link",
+            CopyNotify = "Telegram link copied to clipboard!",
             ToggleAimbot = "Enable Aimbot",
             WallCheck = "Wall Check (Ignore behind wall)",
             ModeLabel = "Mode",
@@ -236,6 +251,24 @@ local function LoadHub()
     FOVCircle.Transparency = 0.7
     FOVCircle.NumSides = 32
 
+    -- ВКЛАДКА: HOME (Главная)
+    local HomeTab = Window:CreateTab(T.TabHome, 4483362458)
+    HomeTab:CreateSection(T.HomeSection)
+    HomeTab:CreateParagraph({Title = "Montano Hub", Content = T.VersionInfo})
+    HomeTab:CreateButton({
+        Name = T.CopyTgBtn,
+        Callback = function()
+            setclipboard("https://t.me/Montanahub123")
+            Rayfield:Notify({
+                Title = "Montano Hub",
+                Content = T.CopyNotify,
+                Duration = 3.5,
+                Image = 4483362458
+            })
+        end,
+    })
+
+    -- ВКЛАДКА: COMBAT (Бой)
     local CombatTab = Window:CreateTab(T.TabCombat, 4483362458)
     CombatTab:CreateToggle({Name = T.ToggleAimbot, CurrentValue = Settings.AimbotEnabled, Callback = function(Value) Settings.AimbotEnabled = Value end})
     CombatTab:CreateToggle({Name = T.WallCheck, CurrentValue = Settings.WallCheck, Callback = function(Value) Settings.WallCheck = Value end})
@@ -256,6 +289,7 @@ local function LoadHub()
     CombatTab:CreateSlider({Name = T.Smoothness, Range = {1, 20}, Increment = 1, Suffix = " шаг", CurrentValue = Settings.Smoothness, Callback = function(Value) Settings.Smoothness = Value end})
     CombatTab:CreateSlider({Name = T.FOVSize, Range = {50, 400}, Increment = 10, Suffix = " px", CurrentValue = Settings.FOV, Callback = function(Value) Settings.FOV = Value; FOVCircle.Radius = Value end})
 
+    -- ВКЛАДКА: VISUALS (Визуал)
     local VisualsTab = Window:CreateTab(T.TabVisuals, 4483362458)
     VisualsTab:CreateToggle({Name = T.Wallhack, CurrentValue = Settings.Wallhack, Callback = function(Value) Settings.Wallhack = Value end})
     VisualsTab:CreateToggle({Name = T.ShowFOVToggle, CurrentValue = Settings.ShowFOV, Callback = function(Value) Settings.ShowFOV = Value end})
@@ -269,6 +303,7 @@ local function LoadHub()
         FOVCircle.Color = Settings.FOVColor
     end})
 
+    -- ВКЛАДКА: MOVEMENT (Движение)
     local MovementTab = Window:CreateTab(T.TabMovement, 4483362458)
     MovementTab:CreateToggle({Name = T.SpeedToggle, CurrentValue = Settings.SpeedHackEnabled, Callback = function(Value) Settings.SpeedHackEnabled = Value end})
     MovementTab:CreateSlider({Name = T.SpeedSlider, Range = {16, 200}, Increment = 2, Suffix = " speed", CurrentValue = Settings.WalkSpeed, Callback = function(Value) Settings.WalkSpeed = Value end})
@@ -277,6 +312,7 @@ local function LoadHub()
     MovementTab:CreateToggle({Name = T.InfJumpToggle, CurrentValue = Settings.InfJump, Callback = function(Value) Settings.InfJump = Value end})
     MovementTab:CreateToggle({Name = T.NoclipToggle, CurrentValue = Settings.Noclip, Callback = function(Value) Settings.Noclip = Value end})
 
+    -- ВКЛАДКА: RADIO (Радио)
     local MusicTab = Window:CreateTab(T.TabRadio, 4483362458)
     MusicTab:CreateInput({Name = T.RadioID, PlaceholderText = "Введите ID трека...", RemoveTextAfterFocusLost = false, Callback = function(Text)
         local MusicID = tonumber(Text)
@@ -287,6 +323,7 @@ local function LoadHub()
     end})
     MusicTab:CreateSlider({Name = T.RadioVol, Range = {0, 10}, Increment = 1, Suffix = "", CurrentValue = math.floor(RadioSound.Volume * 5), Callback = function(Value) RadioSound.Volume = Value / 5 end})
 
+    -- ВКЛАДКА: SETTINGS (Настройки)
     local SettingsTab = Window:CreateTab(T.TabSettings, 4483362458)
     SettingsTab:CreateDropdown({Name = T.LangLabel, Options = {"Русский", "Українська", "English"}, CurrentOption = {Settings.CurrentLang == "UA" and "Українська" or (Settings.CurrentLang == "EN" and "English" or "Русский")}, Callback = function(Option)
         if Option[1] == "Українська" then Settings.CurrentLang = "UA" elseif Option[1] == "English" then Settings.CurrentLang = "EN" else Settings.CurrentLang = "RU" end
