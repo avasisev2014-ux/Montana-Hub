@@ -1,4 +1,4 @@
--- Montano Hub | Cinematic Loader & Full Hub Integration
+-- Montano Hub | v0.9.0 (BETA) + Distance ESP & Updated FOV Range
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local SoundService = game:GetService("SoundService")
@@ -53,7 +53,7 @@ local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 8)
 UICorner.Parent = ConfirmBtn
 
--- Проигрывание звука
+-- Звук заставки
 local Sound = Instance.new("Sound")
 Sound.SoundId = "rbxassetid://111646190557344"
 Sound.Volume = 2
@@ -64,7 +64,6 @@ local function LoadHub()
     ScreenGui:Destroy()
     Sound:Destroy()
     
-    -- Инициализация самого хаба
     local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
     if not _G.MontanoSettings then
@@ -74,6 +73,10 @@ local function LoadHub()
             AimbotEnabled = false,
             AimMode = "Аимбот",
             Wallhack = true,
+            ESPBoxes = false,
+            ESPTracers = false,
+            ESPHealth = false,
+            ESPDistance = true, -- Дистанция включена по умолчанию
             WallCheck = false,
             FOV = 150,
             ShowFOV = true,
@@ -88,8 +91,6 @@ local function LoadHub()
             InfJump = false,
             Noclip = false,
             AntiAFK = true,
-            SelectedTrollTarget = nil,
-            TrollingActive = false
         }
     end
 
@@ -103,41 +104,42 @@ local function LoadHub()
             TabCombat = "Бой",
             TabVisuals = "Визуал",
             TabMovement = "Движение",
-            TabTroll = "Троллинг",
             TabRadio = "Радио",
             TabSettings = "Настройки",
             HomeSection = "Информация о проекте",
-            VersionInfo = "Montano Hub\nТекущая версия: v0.8.9 (БЕТА)\nОфициальный Telegram: https://t.me/Montanahub123",
+            VersionInfo = "Montano Hub\nТекущая версия: v0.9.0 (БЕТА)\nОфициальный Telegram: https://t.me/Montanahub123",
             CopyTgBtn = "📋 Скопировать ссылку на Telegram",
-            CopyNotify = "Ссылка на Telegram-канал скопирована в буфер обмена!",
+            CopyNotify = "Ссылка на Telegram-канал скопирована!",
             ToggleAimbot = "Включить Аимбот",
-            WallCheck = "Проверка стен (Игнорить за стеной)",
+            WallCheck = "Проверка стен",
             ModeLabel = "Режим работы",
             ModeAimbot = "Аимбот",
-            ModeSilent = "Сайлент Аим (Временно не работает)",
-            TargetPart = "Часть тела для прицела",
+            ModeSilent = "Сайлент Аим",
+            TargetPart = "Часть тела",
             AimType = "Тип наводки",
             AimSmooth = "Плавный",
-            AimSnap = "Резкий (Моментальный)",
+            AimSnap = "Резкий",
             Smoothness = "Плавность наводки",
             FOVSize = "Размер круга FOV",
             ShowFOVToggle = "Отображать круг FOV",
             FOVColorLabel = "Цвет круга FOV",
-            Wallhack = "Валхак (Подсветка через стены)",
+            Wallhack = "Валхак (Chams)",
+            ESPBoxes = "Боксы (ESP Box)",
+            ESPTracers = "Линии (ESP Tracers)",
+            ESPHealth = "Здоровье (ESP HP)",
+            ESPDistance = "Дистанция (Дистанция в метрах)",
             SpeedToggle = "Включить Speedhack",
             SpeedSlider = "Скорость бега",
             JumpToggle = "Включить высокий прыжок",
             JumpSlider = "Сила прыжка",
             InfJumpToggle = "Бесконечный прыжок",
             NoclipToggle = "Проход сквозь стены (Noclip)",
-            TrollSelect = "Выбрать игрока для троллинга",
-            TrollToggle = "Флинг (С возвратом на место)",
             RadioID = "Код музыки (Audio ID)",
             RadioPlay = "Воспроизведение музыки",
             RadioVol = "Громкость музыки",
             LangLabel = "Выбор языка",
             ThemeLabel = "Выбор темы",
-            ApplyBtn = "Применить изменения (Перезапуск UI)"
+            ApplyBtn = "Применить изменения"
         },
         UA = {
             WindowTitle = "Montano Hub",
@@ -146,41 +148,42 @@ local function LoadHub()
             TabCombat = "Бій",
             TabVisuals = "Візуал",
             TabMovement = "Рух",
-            TabTroll = "Тролінг",
             TabRadio = "Радіо",
             TabSettings = "Налаштування",
             HomeSection = "Інформація про проєкт",
-            VersionInfo = "Montano Hub\nПоточна версія: v0.8.9 (БЕТА)\nОфіційний Telegram: https://t.me/Montanahub123",
+            VersionInfo = "Montano Hub\nПоточна версія: v0.9.0 (БЕТА)\nОфіційний Telegram: https://t.me/Montanahub123",
             CopyTgBtn = "📋 Скопіювати посилання на Telegram",
-            CopyNotify = "Посилання на Telegram-канал скопійовано!",
+            CopyNotify = "Посилання скопійовано!",
             ToggleAimbot = "Увімкнути Аімбот",
-            WallCheck = "Перевірка стін (Ігнорувати за стіною)",
+            WallCheck = "Перевірка стін",
             ModeLabel = "Режим роботи",
             ModeAimbot = "Аімбот",
-            ModeSilent = "Сайлент Аім (Тимчасово не працює)",
-            TargetPart = "Частина тіла для прицілу",
+            ModeSilent = "Сайлент Аім",
+            TargetPart = "Частина тіла",
             AimType = "Тип наведення",
             AimSmooth = "Плавний",
-            AimSnap = "Різкий (Моментальний)",
+            AimSnap = "Різкий",
             Smoothness = "Плавність наведення",
             FOVSize = "Розмір кола FOV",
             ShowFOVToggle = "Відображати коло FOV",
             FOVColorLabel = "Колір кола FOV",
-            Wallhack = "Валхак (Підсвічування крізь стіни)",
+            Wallhack = "Валхак (Chams)",
+            ESPBoxes = "Бокси (ESP Box)",
+            ESPTracers = "Лінії (ESP Tracers)",
+            ESPHealth = "Здоров'я (ESP HP)",
+            ESPDistance = "Дистанція (Дистанція в метрах)",
             SpeedToggle = "Увімкнути Speedhack",
             SpeedSlider = "Швидкість бігу",
             JumpToggle = "Увімкнути високий стрибок",
             JumpSlider = "Сила стрибка",
             InfJumpToggle = "Нескінченний стрибок",
             NoclipToggle = "Прохід крізь стіни (Noclip)",
-            TrollSelect = "Вибрати гравця для тролінгу",
-            TrollToggle = "Флінг (З поверненням на місце)",
             RadioID = "Код музики (Audio ID)",
             RadioPlay = "Відтворення музики",
             RadioVol = "Гучність музики",
             LangLabel = "Вибір мови",
             ThemeLabel = "Вибір теми",
-            ApplyBtn = "Застосувати зміни (Перезапуск UI)"
+            ApplyBtn = "Застосувати зміни"
         },
         EN = {
             WindowTitle = "Montano Hub",
@@ -189,18 +192,17 @@ local function LoadHub()
             TabCombat = "Combat",
             TabVisuals = "Visuals",
             TabMovement = "Movement",
-            TabTroll = "Trolling",
             TabRadio = "Radio",
             TabSettings = "Settings",
             HomeSection = "Project Information",
-            VersionInfo = "Montano Hub\nCurrent Version: v0.8.9 (BETA)\nOfficial Telegram: https://t.me/Montanahub123",
+            VersionInfo = "Montano Hub\nCurrent Version: v0.9.0 (BETA)\nOfficial Telegram: https://t.me/Montanahub123",
             CopyTgBtn = "📋 Copy Telegram Link",
-            CopyNotify = "Telegram link copied to clipboard!",
+            CopyNotify = "Telegram link copied!",
             ToggleAimbot = "Enable Aimbot",
-            WallCheck = "Wall Check (Ignore behind wall)",
+            WallCheck = "Wall Check",
             ModeLabel = "Mode",
             ModeAimbot = "Aimbot",
-            ModeSilent = "Silent Aim (Temporarily broken)",
+            ModeSilent = "Silent Aim",
             TargetPart = "Target Bone",
             AimType = "Aim Type",
             AimSmooth = "Smooth",
@@ -210,20 +212,22 @@ local function LoadHub()
             ShowFOVToggle = "Show FOV Circle",
             FOVColorLabel = "FOV Circle Color",
             Wallhack = "Wallhack (Chams)",
+            ESPBoxes = "Boxes (ESP Box)",
+            ESPTracers = "Tracers (ESP Lines)",
+            ESPHealth = "Health Bar (ESP HP)",
+            ESPDistance = "Distance (Distance in meters)",
             SpeedToggle = "Enable Speedhack",
             SpeedSlider = "Walk Speed",
             JumpToggle = "Enable High Jump",
             JumpSlider = "Jump Power",
             InfJumpToggle = "Infinite Jump",
             NoclipToggle = "Noclip (Through Walls)",
-            TrollSelect = "Select Player to Troll",
-            TrollToggle = "Fling (With return position)",
-            RadioID = "Music ID (Audio ID)",
+            RadioID = "Music ID",
             RadioPlay = "Play Music",
             RadioVol = "Music Volume",
             LangLabel = "Language Selection",
             ThemeLabel = "Theme Selection",
-            ApplyBtn = "Apply Changes (Reload UI)"
+            ApplyBtn = "Apply Changes"
         }
     }
 
@@ -251,7 +255,20 @@ local function LoadHub()
     FOVCircle.Transparency = 0.7
     FOVCircle.NumSides = 32
 
-    -- ВКЛАДКА: HOME (Главная)
+    local ESPVisuals = {}
+
+    local function RemoveESP(player)
+        if ESPVisuals[player] then
+            for _, obj in pairs(ESPVisuals[player]) do
+                pcall(function() obj:Remove() end)
+            end
+            ESPVisuals[player] = nil
+        end
+    end
+
+    Players.PlayerRemoving:Connect(RemoveESP)
+
+    -- ВКЛАДКА: HOME
     local HomeTab = Window:CreateTab(T.TabHome, 4483362458)
     HomeTab:CreateSection(T.HomeSection)
     HomeTab:CreateParagraph({Title = "Montano Hub", Content = T.VersionInfo})
@@ -268,11 +285,10 @@ local function LoadHub()
         end,
     })
 
-    -- ВКЛАДКА: COMBAT (Бой)
+    -- ВКЛАДКА: COMBAT
     local CombatTab = Window:CreateTab(T.TabCombat, 4483362458)
     CombatTab:CreateToggle({Name = T.ToggleAimbot, CurrentValue = Settings.AimbotEnabled, Callback = function(Value) Settings.AimbotEnabled = Value end})
     CombatTab:CreateToggle({Name = T.WallCheck, CurrentValue = Settings.WallCheck, Callback = function(Value) Settings.WallCheck = Value end})
-
     CombatTab:CreateDropdown({Name = T.ModeLabel, Options = {T.ModeAimbot, T.ModeSilent}, CurrentOption = {T.ModeAimbot}, Callback = function(Option)
         if Option[1]:find("Сайлент") or Option[1]:find("Silent") then Settings.AimMode = "Сайлент Аим" else Settings.AimMode = "Аимбот" end
     end})
@@ -287,11 +303,17 @@ local function LoadHub()
         if Option[1]:find("Резкий") or Option[1]:find("Snap") or Option[1]:find("Різкий") then Settings.AimType = "Snap" else Settings.AimType = "Smooth" end
     end})
     CombatTab:CreateSlider({Name = T.Smoothness, Range = {1, 20}, Increment = 1, Suffix = " шаг", CurrentValue = Settings.Smoothness, Callback = function(Value) Settings.Smoothness = Value end})
-    CombatTab:CreateSlider({Name = T.FOVSize, Range = {50, 400}, Increment = 10, Suffix = " px", CurrentValue = Settings.FOV, Callback = function(Value) Settings.FOV = Value; FOVCircle.Radius = Value end})
+    
+    -- МИНИМАЛЬНЫЙ FOV ИЗМЕНЕН НА 20
+    CombatTab:CreateSlider({Name = T.FOVSize, Range = {20, 400}, Increment = 5, Suffix = " px", CurrentValue = Settings.FOV, Callback = function(Value) Settings.FOV = Value; FOVCircle.Radius = Value end})
 
-    -- ВКЛАДКА: VISUALS (Визуал)
+    -- ВКЛАДКА: VISUALS
     local VisualsTab = Window:CreateTab(T.TabVisuals, 4483362458)
     VisualsTab:CreateToggle({Name = T.Wallhack, CurrentValue = Settings.Wallhack, Callback = function(Value) Settings.Wallhack = Value end})
+    VisualsTab:CreateToggle({Name = T.ESPBoxes, CurrentValue = Settings.ESPBoxes, Callback = function(Value) Settings.ESPBoxes = Value end})
+    VisualsTab:CreateToggle({Name = T.ESPTracers, CurrentValue = Settings.ESPTracers, Callback = function(Value) Settings.ESPTracers = Value end})
+    VisualsTab:CreateToggle({Name = T.ESPHealth, CurrentValue = Settings.ESPHealth, Callback = function(Value) Settings.ESPHealth = Value end})
+    VisualsTab:CreateToggle({Name = T.ESPDistance, CurrentValue = Settings.ESPDistance, Callback = function(Value) Settings.ESPDistance = Value end})
     VisualsTab:CreateToggle({Name = T.ShowFOVToggle, CurrentValue = Settings.ShowFOV, Callback = function(Value) Settings.ShowFOV = Value end})
     VisualsTab:CreateDropdown({Name = T.FOVColorLabel, Options = {"Белый", "Красный", "Зеленый", "Голубой", "Желтый"}, CurrentOption = {"Белый"}, Callback = function(Option)
         local c = Option[1]
@@ -303,7 +325,7 @@ local function LoadHub()
         FOVCircle.Color = Settings.FOVColor
     end})
 
-    -- ВКЛАДКА: MOVEMENT (Движение)
+    -- ВКЛАДКА: MOVEMENT
     local MovementTab = Window:CreateTab(T.TabMovement, 4483362458)
     MovementTab:CreateToggle({Name = T.SpeedToggle, CurrentValue = Settings.SpeedHackEnabled, Callback = function(Value) Settings.SpeedHackEnabled = Value end})
     MovementTab:CreateSlider({Name = T.SpeedSlider, Range = {16, 200}, Increment = 2, Suffix = " speed", CurrentValue = Settings.WalkSpeed, Callback = function(Value) Settings.WalkSpeed = Value end})
@@ -312,7 +334,7 @@ local function LoadHub()
     MovementTab:CreateToggle({Name = T.InfJumpToggle, CurrentValue = Settings.InfJump, Callback = function(Value) Settings.InfJump = Value end})
     MovementTab:CreateToggle({Name = T.NoclipToggle, CurrentValue = Settings.Noclip, Callback = function(Value) Settings.Noclip = Value end})
 
-    -- ВКЛАДКА: RADIO (Радио)
+    -- ВКЛАДКА: RADIO
     local MusicTab = Window:CreateTab(T.TabRadio, 4483362458)
     MusicTab:CreateInput({Name = T.RadioID, PlaceholderText = "Введите ID трека...", RemoveTextAfterFocusLost = false, Callback = function(Text)
         local MusicID = tonumber(Text)
@@ -323,7 +345,7 @@ local function LoadHub()
     end})
     MusicTab:CreateSlider({Name = T.RadioVol, Range = {0, 10}, Increment = 1, Suffix = "", CurrentValue = math.floor(RadioSound.Volume * 5), Callback = function(Value) RadioSound.Volume = Value / 5 end})
 
-    -- ВКЛАДКА: SETTINGS (Настройки)
+    -- ВКЛАДКА: SETTINGS
     local SettingsTab = Window:CreateTab(T.TabSettings, 4483362458)
     SettingsTab:CreateDropdown({Name = T.LangLabel, Options = {"Русский", "Українська", "English"}, CurrentOption = {Settings.CurrentLang == "UA" and "Українська" or (Settings.CurrentLang == "EN" and "English" or "Русский")}, Callback = function(Option)
         if Option[1] == "Українська" then Settings.CurrentLang = "UA" elseif Option[1] == "English" then Settings.CurrentLang = "EN" else Settings.CurrentLang = "RU" end
@@ -409,22 +431,147 @@ local function LoadHub()
             end
         end
 
+        local activePlayers = {}
+
         for _, v in pairs(Players:GetPlayers()) do
-            if v ~= LocalPlayer and v.Character then
-                local Highlight = v.Character:FindFirstChild("HubHighlight")
-                if Settings.Wallhack then
-                    if not Highlight then
-                        Highlight = Instance.new("Highlight")
-                        Highlight.Name = "HubHighlight"
-                        Highlight.FillColor = Color3.fromRGB(255, 0, 0)
-                        Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-                        Highlight.FillTransparency = 0.5
-                        Highlight.OutlineTransparency = 0
-                        Highlight.Parent = v.Character
+            if v ~= LocalPlayer then
+                activePlayers[v] = true
+                if v.Character and v.Character:FindFirstChild("Humanoid") and v.Character:FindFirstChild("HumanoidRootPart") then
+                    local char = v.Character
+                    local hum = char.Humanoid
+                    local rootPart = char.HumanoidRootPart
+
+                    if not ESPVisuals[v] then
+                        ESPVisuals[v] = {
+                            Box = Drawing.new("Square"),
+                            Tracer = Drawing.new("Line"),
+                            HealthBar = Drawing.new("Line"),
+                            HealthText = Drawing.new("Text"),
+                            DistanceText = Drawing.new("Text") -- Элемент для дистанции
+                        }
+                        local esp = ESPVisuals[v]
+                        esp.Box.Thickness = 1.5
+                        esp.Box.Filled = false
+                        esp.Tracer.Thickness = 1
+                        esp.HealthBar.Thickness = 2.5
+                        esp.HealthText.Size = 13
+                        esp.HealthText.Center = true
+                        esp.HealthText.Outline = true
+                        esp.HealthText.Color = Color3.fromRGB(0, 255, 0)
+
+                        esp.DistanceText.Size = 13
+                        esp.DistanceText.Center = true
+                        esp.DistanceText.Outline = true
+                        esp.DistanceText.Color = Color3.fromRGB(255, 255, 255)
+                    end
+
+                    local esp = ESPVisuals[v]
+                    local head = char:FindFirstChild("Head")
+
+                    if hum.Health > 0 and head then
+                        local vector, onScreen = Camera:WorldToViewportPoint(rootPart.Position)
+
+                        if onScreen then
+                            local headPos = Camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
+                            local legPos = Camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, 3, 0))
+                            local height = math.abs(headPos.Y - legPos.Y)
+                            local width = height / 2
+
+                            -- 1. Боксы
+                            if Settings.ESPBoxes then
+                                esp.Box.Visible = true
+                                esp.Box.Size = Vector2.new(width, height)
+                                esp.Box.Position = Vector2.new(vector.X - width / 2, headPos.Y)
+                                esp.Box.Color = Color3.fromRGB(255, 255, 255)
+                            else
+                                esp.Box.Visible = false
+                            end
+
+                            -- 2. Трейсеры
+                            if Settings.ESPTracers then
+                                esp.Tracer.Visible = true
+                                esp.Tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+                                esp.Tracer.To = Vector2.new(vector.X, legPos.Y)
+                                esp.Tracer.Color = Color3.fromRGB(255, 255, 255)
+                            else
+                                esp.Tracer.Visible = false
+                            end
+
+                            -- 3. HP
+                            if Settings.ESPHealth then
+                                local healthPercent = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
+                                local barHeight = height * healthPercent
+                                
+                                esp.HealthBar.Visible = true
+                                esp.HealthBar.From = Vector2.new(vector.X - width / 2 - 6, legPos.Y)
+                                esp.HealthBar.To = Vector2.new(vector.X - width / 2 - 6, legPos.Y - barHeight)
+                                esp.HealthBar.Color = Color3.fromRGB(255 * (1 - healthPercent), 255 * healthPercent, 0)
+
+                                esp.HealthText.Visible = true
+                                esp.HealthText.Text = math.floor(hum.Health) .. " HP"
+                                esp.HealthText.Position = Vector2.new(vector.X - width / 2 - 25, legPos.Y - height / 2)
+                            else
+                                esp.HealthBar.Visible = false
+                                esp.HealthText.Visible = false
+                            end
+
+                            -- 4. Дистанция в метрах (1м ≈ 3.57 studs)
+                            if Settings.ESPDistance and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                                local myRoot = LocalPlayer.Character.HumanoidRootPart
+                                local distStuds = (myRoot.Position - rootPart.Position).Magnitude
+                                local distMeters = math.floor(distStuds / 3.57)
+
+                                esp.DistanceText.Visible = true
+                                esp.DistanceText.Text = distMeters .. "m"
+                                esp.DistanceText.Position = Vector2.new(vector.X, legPos.Y + 2)
+                            else
+                                esp.DistanceText.Visible = false
+                            end
+                        else
+                            esp.Box.Visible = false
+                            esp.Tracer.Visible = false
+                            esp.HealthBar.Visible = false
+                            esp.HealthText.Visible = false
+                            esp.DistanceText.Visible = false
+                        end
+                    else
+                        esp.Box.Visible = false
+                        esp.Tracer.Visible = false
+                        esp.HealthBar.Visible = false
+                        esp.HealthText.Visible = false
+                        esp.DistanceText.Visible = false
+                    end
+
+                    -- Chams
+                    local Highlight = char:FindFirstChild("HubHighlight")
+                    if Settings.Wallhack then
+                        if not Highlight then
+                            Highlight = Instance.new("Highlight")
+                            Highlight.Name = "HubHighlight"
+                            Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                            Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                            Highlight.FillTransparency = 0.5
+                            Highlight.OutlineTransparency = 0
+                            Highlight.Parent = char
+                        end
+                    else
+                        if Highlight then Highlight:Destroy() end
                     end
                 else
-                    if Highlight then Highlight:Destroy() end
+                    if ESPVisuals[v] then
+                        ESPVisuals[v].Box.Visible = false
+                        ESPVisuals[v].Tracer.Visible = false
+                        ESPVisuals[v].HealthBar.Visible = false
+                        ESPVisuals[v].HealthText.Visible = false
+                        ESPVisuals[v].DistanceText.Visible = false
+                    end
                 end
+            end
+        end
+
+        for player, _ in pairs(ESPVisuals) do
+            if not activePlayers[player] then
+                RemoveESP(player)
             end
         end
     end)
