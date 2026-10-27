@@ -1,4 +1,4 @@
--- Montano Hub | v0.9.0 (BETA) + Distance ESP & Updated FOV Range
+-- Montano Hub | v0.9.1 (Halloween Purple Edition 🎃💜)
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local SoundService = game:GetService("SoundService")
@@ -7,7 +7,7 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- Кастомная заставка
+-- Хэллоуинская заставка
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "MontanoLoader"
 ScreenGui.IgnoreGuiInset = true
@@ -16,15 +16,15 @@ ScreenGui.Parent = CoreGui
 
 local Frame = Instance.new("Frame")
 Frame.Size = UDim2.new(1, 0, 1, 0)
-Frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Frame.BackgroundColor3 = Color3.fromRGB(20, 10, 30) -- Глубокий фиолетово-ночной фон
 Frame.Parent = ScreenGui
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(0, 400, 0, 50)
-Title.Position = UDim2.new(0.5, -200, 0.4, -40)
-Title.Text = "Montano Hub Loading..."
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 24
+Title.Size = UDim2.new(0, 600, 0, 50)
+Title.Position = UDim2.new(0.5, -300, 0.4, -40)
+Title.Text = "🎃 MONTANO HUB: v0.9.1 HALLOWEEN 🕷️"
+Title.TextColor3 = Color3.fromRGB(255, 120, 0) -- Тыквенный акцент
+Title.TextSize = 22
 Title.Font = Enum.Font.GothamBold
 Title.BackgroundTransparency = 1
 Title.Parent = Frame
@@ -32,20 +32,20 @@ Title.Parent = Frame
 local Subtitle = Instance.new("TextLabel")
 Subtitle.Size = UDim2.new(0, 400, 0, 30)
 Subtitle.Position = UDim2.new(0.5, -200, 0.4, 10)
-Subtitle.Text = "Welcome, " .. LocalPlayer.Name .. "!"
-Subtitle.TextColor3 = Color3.fromRGB(0, 255, 128)
-Subtitle.TextSize = 18
+Subtitle.Text = "Добро пожаловать в темноту, " .. LocalPlayer.Name .. "..."
+Subtitle.TextColor3 = Color3.fromRGB(180, 80, 255) -- Магический фиолетовый
+Subtitle.TextSize = 16
 Subtitle.Font = Enum.Font.Gotham
 Subtitle.BackgroundTransparency = 1
 Subtitle.Parent = Frame
 
 local ConfirmBtn = Instance.new("TextButton")
-ConfirmBtn.Size = UDim2.new(0, 220, 0, 50)
-ConfirmBtn.Position = UDim2.new(0.5, -110, 0.55, 0)
-ConfirmBtn.BackgroundColor3 = Color3.fromRGB(50, 205, 50)
-ConfirmBtn.Text = "ПРОДОЛЖИТЬ"
+ConfirmBtn.Size = UDim2.new(0, 240, 0, 50)
+ConfirmBtn.Position = UDim2.new(0.5, -120, 0.55, 0)
+ConfirmBtn.BackgroundColor3 = Color3.fromRGB(150, 40, 220)
+ConfirmBtn.Text = "ВОЙТИ В ХАБ 🎃"
 ConfirmBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-ConfirmBtn.TextSize = 18
+ConfirmBtn.TextSize = 16
 ConfirmBtn.Font = Enum.Font.GothamBold
 ConfirmBtn.Parent = Frame
 
@@ -53,7 +53,7 @@ local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 8)
 UICorner.Parent = ConfirmBtn
 
--- Звук заставки
+-- Звук
 local Sound = Instance.new("Sound")
 Sound.SoundId = "rbxassetid://111646190557344"
 Sound.Volume = 2
@@ -69,18 +69,18 @@ local function LoadHub()
     if not _G.MontanoSettings then
         _G.MontanoSettings = {
             CurrentLang = "RU",
-            CurrentTheme = "Default",
+            CurrentTheme = "Amethyst", -- Фиолетовая тема по умолчанию (Halloween стиль!)
             AimbotEnabled = false,
             AimMode = "Аимбот",
             Wallhack = true,
             ESPBoxes = false,
             ESPTracers = false,
             ESPHealth = false,
-            ESPDistance = true, -- Дистанция включена по умолчанию
+            ESPDistance = true,
             WallCheck = false,
             FOV = 150,
             ShowFOV = true,
-            FOVColor = Color3.fromRGB(255, 255, 255),
+            FOVColor = Color3.fromRGB(255, 120, 0),
             TargetPart = "Head",
             AimType = "Smooth",
             Smoothness = 5,
@@ -98,18 +98,18 @@ local function LoadHub()
 
     local Locales = {
         RU = {
-            WindowTitle = "Montano Hub",
-            Loading = "Загрузка Montano Hub...",
+            WindowTitle = "🎃 Montano Hub v0.9.1 [Halloween] 🕷️",
+            Loading = "Загрузка магии...",
             TabHome = "Главная",
             TabCombat = "Бой",
             TabVisuals = "Визуал",
             TabMovement = "Движение",
             TabRadio = "Радио",
             TabSettings = "Настройки",
-            HomeSection = "Информация о проекте",
-            VersionInfo = "Montano Hub\nТекущая версия: v0.9.0 (БЕТА)\nОфициальный Telegram: https://t.me/Montanahub123",
+            HomeSection = "Информация о проекте (v0.9.1)",
+            VersionInfo = "Montano Hub v0.9.1 🎃\nПраздничное обновление с фиолетовой темой!\nTelegram: https://t.me/Montanahub123",
             CopyTgBtn = "📋 Скопировать ссылку на Telegram",
-            CopyNotify = "Ссылка на Telegram-канал скопирована!",
+            CopyNotify = "Ссылка скопирована в буфер обмена!",
             ToggleAimbot = "Включить Аимбот",
             WallCheck = "Проверка стен",
             ModeLabel = "Режим работы",
@@ -120,14 +120,14 @@ local function LoadHub()
             AimSmooth = "Плавный",
             AimSnap = "Резкий",
             Smoothness = "Плавность наводки",
-            FOVSize = "Размер круга FOV",
+            FOVSize = "Размер круга FOV (от 20 px)",
             ShowFOVToggle = "Отображать круг FOV",
             FOVColorLabel = "Цвет круга FOV",
             Wallhack = "Валхак (Chams)",
             ESPBoxes = "Боксы (ESP Box)",
             ESPTracers = "Линии (ESP Tracers)",
             ESPHealth = "Здоровье (ESP HP)",
-            ESPDistance = "Дистанция (Дистанция в метрах)",
+            ESPDistance = "Дистанция в метрах (🎃)",
             SpeedToggle = "Включить Speedhack",
             SpeedSlider = "Скорость бега",
             JumpToggle = "Включить высокий прыжок",
@@ -138,20 +138,20 @@ local function LoadHub()
             RadioPlay = "Воспроизведение музыки",
             RadioVol = "Громкость музыки",
             LangLabel = "Выбор языка",
-            ThemeLabel = "Выбор темы",
+            ThemeLabel = "Выбор темы (Фиолетовая по умолчанию 🟣)",
             ApplyBtn = "Применить изменения"
         },
         UA = {
-            WindowTitle = "Montano Hub",
-            Loading = "Завантаження Montano Hub...",
+            WindowTitle = "🎃 Montano Hub v0.9.1 [Halloween] 🕷️",
+            Loading = "Завантаження магії...",
             TabHome = "Головна",
             TabCombat = "Бій",
             TabVisuals = "Візуал",
             TabMovement = "Рух",
             TabRadio = "Радіо",
             TabSettings = "Налаштування",
-            HomeSection = "Інформація про проєкт",
-            VersionInfo = "Montano Hub\nПоточна версія: v0.9.0 (БЕТА)\nОфіційний Telegram: https://t.me/Montanahub123",
+            HomeSection = "Інформація про проєкт (v0.9.1)",
+            VersionInfo = "Montano Hub v0.9.1 🎃\nСвяткове оновлення з фіолетовою темою!\nTelegram: https://t.me/Montanahub123",
             CopyTgBtn = "📋 Скопіювати посилання на Telegram",
             CopyNotify = "Посилання скопійовано!",
             ToggleAimbot = "Увімкнути Аімбот",
@@ -164,21 +164,21 @@ local function LoadHub()
             AimSmooth = "Плавний",
             AimSnap = "Різкий",
             Smoothness = "Плавність наведення",
-            FOVSize = "Розмір кола FOV",
+            FOVSize = "Розмір кола FOV (від 20 px)",
             ShowFOVToggle = "Відображати коло FOV",
             FOVColorLabel = "Колір кола FOV",
             Wallhack = "Валхак (Chams)",
             ESPBoxes = "Бокси (ESP Box)",
             ESPTracers = "Лінії (ESP Tracers)",
             ESPHealth = "Здоров'я (ESP HP)",
-            ESPDistance = "Дистанція (Дистанція в метрах)",
+            ESPDistance = "Дистанція в метрах (🎃)",
             SpeedToggle = "Увімкнути Speedhack",
             SpeedSlider = "Швидкість бігу",
             JumpToggle = "Увімкнути високий стрибок",
             JumpSlider = "Сила стрибка",
             InfJumpToggle = "Нескінченний стрибок",
             NoclipToggle = "Прохід крізь стіни (Noclip)",
-            RadioID = "Код музики (Audio ID)",
+            RadioID = "Код музыки (Audio ID)",
             RadioPlay = "Відтворення музики",
             RadioVol = "Гучність музики",
             LangLabel = "Вибір мови",
@@ -186,16 +186,16 @@ local function LoadHub()
             ApplyBtn = "Застосувати зміни"
         },
         EN = {
-            WindowTitle = "Montano Hub",
-            Loading = "Loading Montano Hub...",
+            WindowTitle = "🎃 Montano Hub v0.9.1 [Halloween] 🕷️",
+            Loading = "Loading Magic...",
             TabHome = "Home",
             TabCombat = "Combat",
             TabVisuals = "Visuals",
             TabMovement = "Movement",
             TabRadio = "Radio",
             TabSettings = "Settings",
-            HomeSection = "Project Information",
-            VersionInfo = "Montano Hub\nCurrent Version: v0.9.0 (BETA)\nOfficial Telegram: https://t.me/Montanahub123",
+            HomeSection = "Project Information (v0.9.1)",
+            VersionInfo = "Montano Hub v0.9.1 🎃\nSpecial Purple Theme Update!\nTelegram: https://t.me/Montanahub123",
             CopyTgBtn = "📋 Copy Telegram Link",
             CopyNotify = "Telegram link copied!",
             ToggleAimbot = "Enable Aimbot",
@@ -208,14 +208,14 @@ local function LoadHub()
             AimSmooth = "Smooth",
             AimSnap = "Snap",
             Smoothness = "Aim Smoothness",
-            FOVSize = "FOV Circle Size",
+            FOVSize = "FOV Circle Size (from 20 px)",
             ShowFOVToggle = "Show FOV Circle",
             FOVColorLabel = "FOV Circle Color",
             Wallhack = "Wallhack (Chams)",
             ESPBoxes = "Boxes (ESP Box)",
             ESPTracers = "Tracers (ESP Lines)",
             ESPHealth = "Health Bar (ESP HP)",
-            ESPDistance = "Distance (Distance in meters)",
+            ESPDistance = "Distance in meters (🎃)",
             SpeedToggle = "Enable Speedhack",
             SpeedSlider = "Walk Speed",
             JumpToggle = "Enable High Jump",
@@ -239,6 +239,13 @@ local function LoadHub()
        ConfigurationSaving = { Enabled = false },
        KeySystem = false,
        Theme = Settings.CurrentTheme
+    })
+
+    Rayfield:Notify({
+        Title = "🎃 Montano Hub v0.9.1",
+        Content = "Фиолетовая хэллоуинская тема активна!",
+        Duration = 5,
+        Image = 6023426915
     })
 
     local RadioSound = SoundService:FindFirstChild("MontanoRadio") or Instance.new("Sound")
@@ -269,18 +276,18 @@ local function LoadHub()
     Players.PlayerRemoving:Connect(RemoveESP)
 
     -- ВКЛАДКА: HOME
-    local HomeTab = Window:CreateTab(T.TabHome, 4483362458)
+    local HomeTab = Window:CreateTab(T.TabHome, 6023426915)
     HomeTab:CreateSection(T.HomeSection)
-    HomeTab:CreateParagraph({Title = "Montano Hub", Content = T.VersionInfo})
+    HomeTab:CreateParagraph({Title = "🎃 Montano Hub [v0.9.1 Halloween]", Content = T.VersionInfo})
     HomeTab:CreateButton({
         Name = T.CopyTgBtn,
         Callback = function()
             setclipboard("https://t.me/Montanahub123")
             Rayfield:Notify({
-                Title = "Montano Hub",
+                Title = "Montano Hub 🎃",
                 Content = T.CopyNotify,
                 Duration = 3.5,
-                Image = 4483362458
+                Image = 6023426915
             })
         end,
     })
@@ -304,7 +311,7 @@ local function LoadHub()
     end})
     CombatTab:CreateSlider({Name = T.Smoothness, Range = {1, 20}, Increment = 1, Suffix = " шаг", CurrentValue = Settings.Smoothness, Callback = function(Value) Settings.Smoothness = Value end})
     
-    -- МИНИМАЛЬНЫЙ FOV ИЗМЕНЕН НА 20
+    -- FOV от 20 px
     CombatTab:CreateSlider({Name = T.FOVSize, Range = {20, 400}, Increment = 5, Suffix = " px", CurrentValue = Settings.FOV, Callback = function(Value) Settings.FOV = Value; FOVCircle.Radius = Value end})
 
     -- ВКЛАДКА: VISUALS
@@ -315,13 +322,12 @@ local function LoadHub()
     VisualsTab:CreateToggle({Name = T.ESPHealth, CurrentValue = Settings.ESPHealth, Callback = function(Value) Settings.ESPHealth = Value end})
     VisualsTab:CreateToggle({Name = T.ESPDistance, CurrentValue = Settings.ESPDistance, Callback = function(Value) Settings.ESPDistance = Value end})
     VisualsTab:CreateToggle({Name = T.ShowFOVToggle, CurrentValue = Settings.ShowFOV, Callback = function(Value) Settings.ShowFOV = Value end})
-    VisualsTab:CreateDropdown({Name = T.FOVColorLabel, Options = {"Белый", "Красный", "Зеленый", "Голубой", "Желтый"}, CurrentOption = {"Белый"}, Callback = function(Option)
+    VisualsTab:CreateDropdown({Name = T.FOVColorLabel, Options = {"Тыквенный (Оранжевый)", "Кровавый (Красный)", "Магический (Зеленый)", "Призрачный (Белый)"}, CurrentOption = {"Тыквенный (Оранжевый)"}, Callback = function(Option)
         local c = Option[1]
-        if c == "Красный" then Settings.FOVColor = Color3.fromRGB(255, 0, 0)
-        elseif c == "Зеленый" then Settings.FOVColor = Color3.fromRGB(0, 255, 0)
-        elseif c == "Голубой" then Settings.FOVColor = Color3.fromRGB(0, 200, 255)
-        elseif c == "Желтый" then Settings.FOVColor = Color3.fromRGB(255, 255, 0)
-        else Settings.FOVColor = Color3.fromRGB(255, 255, 255) end
+        if c:find("Кровавый") then Settings.FOVColor = Color3.fromRGB(255, 0, 0)
+        elseif c:find("Магический") then Settings.FOVColor = Color3.fromRGB(0, 255, 100)
+        elseif c:find("Призрачный") then Settings.FOVColor = Color3.fromRGB(255, 255, 255)
+        else Settings.FOVColor = Color3.fromRGB(255, 120, 0) end
         FOVCircle.Color = Settings.FOVColor
     end})
 
@@ -345,17 +351,17 @@ local function LoadHub()
     end})
     MusicTab:CreateSlider({Name = T.RadioVol, Range = {0, 10}, Increment = 1, Suffix = "", CurrentValue = math.floor(RadioSound.Volume * 5), Callback = function(Value) RadioSound.Volume = Value / 5 end})
 
-    -- ВКЛАДКА: SETTINGS
+    -- ВКЛАДКА: SETTINGS (С выбором тем, где фиолетовая Amethyst — первая/по умолчанию)
     local SettingsTab = Window:CreateTab(T.TabSettings, 4483362458)
     SettingsTab:CreateDropdown({Name = T.LangLabel, Options = {"Русский", "Українська", "English"}, CurrentOption = {Settings.CurrentLang == "UA" and "Українська" or (Settings.CurrentLang == "EN" and "English" or "Русский")}, Callback = function(Option)
         if Option[1] == "Українська" then Settings.CurrentLang = "UA" elseif Option[1] == "English" then Settings.CurrentLang = "EN" else Settings.CurrentLang = "RU" end
     end})
-    SettingsTab:CreateDropdown({Name = T.ThemeLabel, Options = {"Темная (Default)", "Светлая (Light)", "Серая (Serenity)", "Синяя (DarkBlue)", "Фиолетовая (Amethyst)"}, CurrentOption = {"Темная (Default)"}, Callback = function(Option)
+    SettingsTab:CreateDropdown({Name = T.ThemeLabel, Options = {"Фиолетовая (Amethyst - Halloween 🟣)", "Темная (Default)", "Светлая (Light)", "Серая (Serenity)", "Синяя (DarkBlue)"}, CurrentOption = {"Фиолетовая (Amethyst - Halloween 🟣)"}, Callback = function(Option)
         local themeName = Option[1]
-        if themeName:find("Светлая") or themeName:find("Light") then Settings.CurrentTheme = "Light"
+        if themeName:find("Фиолетовая") or themeName:find("Amethyst") then Settings.CurrentTheme = "Amethyst"
+        elseif themeName:find("Светлая") or themeName:find("Light") then Settings.CurrentTheme = "Light"
         elseif themeName:find("Серая") or themeName:find("Serenity") then Settings.CurrentTheme = "Serenity"
         elseif themeName:find("Синяя") or themeName:find("DarkBlue") then Settings.CurrentTheme = "DarkBlue"
-        elseif themeName:find("Фиолетовая") or themeName:find("Amethyst") then Settings.CurrentTheme = "Amethyst"
         else Settings.CurrentTheme = "Default" end
     end})
     SettingsTab:CreateButton({Name = T.ApplyBtn, Callback = function()
@@ -447,7 +453,7 @@ local function LoadHub()
                             Tracer = Drawing.new("Line"),
                             HealthBar = Drawing.new("Line"),
                             HealthText = Drawing.new("Text"),
-                            DistanceText = Drawing.new("Text") -- Элемент для дистанции
+                            DistanceText = Drawing.new("Text")
                         }
                         local esp = ESPVisuals[v]
                         esp.Box.Thickness = 1.5
@@ -462,7 +468,7 @@ local function LoadHub()
                         esp.DistanceText.Size = 13
                         esp.DistanceText.Center = true
                         esp.DistanceText.Outline = true
-                        esp.DistanceText.Color = Color3.fromRGB(255, 255, 255)
+                        esp.DistanceText.Color = Color3.fromRGB(255, 120, 0)
                     end
 
                     local esp = ESPVisuals[v]
@@ -482,7 +488,7 @@ local function LoadHub()
                                 esp.Box.Visible = true
                                 esp.Box.Size = Vector2.new(width, height)
                                 esp.Box.Position = Vector2.new(vector.X - width / 2, headPos.Y)
-                                esp.Box.Color = Color3.fromRGB(255, 255, 255)
+                                esp.Box.Color = Color3.fromRGB(255, 120, 0)
                             else
                                 esp.Box.Visible = false
                             end
@@ -492,7 +498,7 @@ local function LoadHub()
                                 esp.Tracer.Visible = true
                                 esp.Tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
                                 esp.Tracer.To = Vector2.new(vector.X, legPos.Y)
-                                esp.Tracer.Color = Color3.fromRGB(255, 255, 255)
+                                esp.Tracer.Color = Color3.fromRGB(255, 120, 0)
                             else
                                 esp.Tracer.Visible = false
                             end
@@ -515,14 +521,14 @@ local function LoadHub()
                                 esp.HealthText.Visible = false
                             end
 
-                            -- 4. Дистанция в метрах (1м ≈ 3.57 studs)
+                            -- 4. Дистанция в метрах
                             if Settings.ESPDistance and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                                 local myRoot = LocalPlayer.Character.HumanoidRootPart
                                 local distStuds = (myRoot.Position - rootPart.Position).Magnitude
                                 local distMeters = math.floor(distStuds / 3.57)
 
                                 esp.DistanceText.Visible = true
-                                esp.DistanceText.Text = distMeters .. "m"
+                                esp.DistanceText.Text = distMeters .. "m 🎃"
                                 esp.DistanceText.Position = Vector2.new(vector.X, legPos.Y + 2)
                             else
                                 esp.DistanceText.Visible = false
@@ -548,8 +554,8 @@ local function LoadHub()
                         if not Highlight then
                             Highlight = Instance.new("Highlight")
                             Highlight.Name = "HubHighlight"
-                            Highlight.FillColor = Color3.fromRGB(255, 0, 0)
-                            Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                            Highlight.FillColor = Color3.fromRGB(150, 40, 220)
+                            Highlight.OutlineColor = Color3.fromRGB(255, 120, 0)
                             Highlight.FillTransparency = 0.5
                             Highlight.OutlineTransparency = 0
                             Highlight.Parent = char
