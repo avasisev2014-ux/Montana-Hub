@@ -1,4 +1,7 @@
--- Montano Hub | v1.0 [Official Release + Working Languages] 🚀
+-- ==========================================
+-- Montano Hub v1.0 [Official Release + New Keys + Fixes] 🚀
+-- ==========================================
+
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local SoundService = game:GetService("SoundService")
@@ -49,15 +52,15 @@ if not _G.MontanoSettings then
 end
 
 local Settings = _G.MontanoSettings
-_G.MontanoIsPro = false
+_G.MontanoIsPro = _G.MontanoIsPro or false
 
--- 15 ключей для PRO версии
+-- 🔥 СВЕЖИЕ 15 КЛЮЧЕЙ ДЛЯ PRO ВЕРСИИ
 local ValidKeys = {
-    ["MONTANO1"] = true, ["MONTANO2"] = true, ["MONTANO3"] = true,
-    ["MONTANO4"] = true, ["MONTANO5"] = true, ["MONTANO6"] = true,
-    ["MONTANO7"] = true, ["MONTANO8"] = true, ["MONTANO9"] = true,
-    ["MONTANO10"] = true, ["MONTANO11"] = true, ["MONTANO12"] = true,
-    ["MONTANO13"] = true, ["MONTANO14"] = true, ["MONTANO15"] = true,
+    ["PRO_2027_ALPHA"] = true, ["PRO_2027_BETA"]  = true, ["PRO_2027_GAMMA"] = true,
+    ["PRO_2027_DELTA"] = true, ["PRO_2027_VIP01"]  = true, ["PRO_2027_VIP02"] = true,
+    ["PRO_2027_VIP03"] = true, ["PRO_2027_VIP04"]  = true, ["PRO_2027_VIP05"] = true,
+    ["MONTANO_TOP1"]   = true, ["MONTANO_TOP2"]   = true, ["MONTANO_TOP3"]   = true,
+    ["MONTANO_STAR1"]  = true, ["MONTANO_STAR2"]  = true, ["MONTANO_STAR3"]  = true,
 }
 
 local HitAudio = Instance.new("Sound")
@@ -247,7 +250,7 @@ MusicTab:CreateToggle({Name = "Воспроизведение музыки", Cur
     if Value then RadioSound:Resume() else RadioSound:Pause() end
 end})
 
--- ВКЛАДКА: SETTINGS (С выбором языков и тем)
+-- ВКЛАДКА: SETTINGS
 local SettingsTab = Window:CreateTab(T.TabSettings, 4483362458)
 SettingsTab:CreateSection(T.KeySection)
 SettingsTab:CreateInput({
@@ -289,7 +292,7 @@ SettingsTab:CreateDropdown({
         elseif themeName:find("Серая") then Settings.CurrentTheme = "Serenity"
         elseif themeName:find("Синяя") then Settings.CurrentTheme = "DarkBlue"
         else Settings.CurrentTheme = "Default" end
-        Rayfield:Notify({Title = "Тема измененная", Content = "Перезапустите хуб для применения темы", Duration = 3})
+        Rayfield:Notify({Title = "Тема изменена", Content = "Перезапустите хуб для применения темы", Duration = 3})
     end
 })
 
