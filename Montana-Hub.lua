@@ -54,13 +54,13 @@ end
 local Settings = _G.MontanoSettings
 _G.MontanoIsPro = _G.MontanoIsPro or false
 
--- 🔥 СВЕЖИЕ 15 КЛЮЧЕЙ ДЛЯ PRO ВЕРСИИ
+-- 🔥 СОВЕРШЕННО НОВЫЕ 15 КЛЮЧЕЙ ДЛЯ PRO ВЕРСИИ
 local ValidKeys = {
-    ["PRO_2027_ALPHA"] = true, ["PRO_2027_BETA"]  = true, ["PRO_2027_GAMMA"] = true,
-    ["PRO_2027_DELTA"] = true, ["PRO_2027_VIP01"]  = true, ["PRO_2027_VIP02"] = true,
-    ["PRO_2027_VIP03"] = true, ["PRO_2027_VIP04"]  = true, ["PRO_2027_VIP05"] = true,
-    ["MONTANO_TOP1"]   = true, ["MONTANO_TOP2"]   = true, ["MONTANO_TOP3"]   = true,
-    ["MONTANO_STAR1"]  = true, ["MONTANO_STAR2"]  = true, ["MONTANO_STAR3"]  = true,
+    ["MONTANO_X_2027"] = true, ["ALPHA_PRIME_99"] = true, ["BETA_TEST_777"]  = true,
+    ["GAMMA_DRIVE_X"]  = true, ["DELTA_FORCE_01"] = true, ["VIP_LEGEND_555"] = true,
+    ["SUPREME_KEY_88"] = true, ["ELITE_ACCESS_9"] = true, ["ULTRA_BOOST_123"] = true,
+    ["MONTANO_KING_7"] = true, ["STAR_POWER_44"]  = true, ["NEXUS_CORE_999"] = true,
+    ["CYBER_PASS_20"]  = true, ["PHOENIX_KEY_11"] = true, ["TITAN_VIP_007"]  = true,
 }
 
 local HitAudio = Instance.new("Sound")
