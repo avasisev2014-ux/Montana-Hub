@@ -1,5 +1,5 @@
 -- ==========================================
--- Montano Hub v1.0 [Official Release + New Keys + Fixes] 🚀
+-- Montano Hub v1.1.0 [Official Release Edition] 🚀
 -- ==========================================
 
 local Players = game:GetService("Players")
@@ -7,6 +7,7 @@ local CoreGui = game:GetService("CoreGui")
 local SoundService = game:GetService("SoundService")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local Stats = game:GetService("Stats")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
@@ -26,6 +27,9 @@ if not _G.MontanoSettings then
         AimbotEnabled = false,
         AimMode = "Аимбот",
         Wallhack = true,
+        XRayEnabled = false,
+        AntiRecoil = false,
+        ShowStatsUI = true,
         ESPBoxes = false,
         ESPTracers = false,
         ESPHealth = false,
@@ -54,7 +58,7 @@ end
 local Settings = _G.MontanoSettings
 _G.MontanoIsPro = _G.MontanoIsPro or false
 
--- 🔥 СОВЕРШЕННО НОВЫЕ 15 КЛЮЧЕЙ ДЛЯ PRO ВЕРСИИ
+-- 🔥 СВЕЖИЕ 15 PRO КЛЮЧЕЙ
 local ValidKeys = {
     ["MONTANO_X_2027"] = true, ["ALPHA_PRIME_99"] = true, ["BETA_TEST_777"]  = true,
     ["GAMMA_DRIVE_X"]  = true, ["DELTA_FORCE_01"] = true, ["VIP_LEGEND_555"] = true,
@@ -71,11 +75,12 @@ HitAudio.Parent = SoundService
 -- Словари языков
 local Locales = {
     RU = {
-        Title = "🔥 Montano Hub v1.0 [Official Release] 🚀",
+        Title = "🔥 Montano Hub v1.1.0 [Release Edition] 🚀",
         TabHome = "Главная",
         TabCombat = "Бой [PRO 💎]",
         TabVisuals = "Визуал",
         TabMovement = "Движение",
+        TabTeleport = "Телепорт [PRO 💎]",
         TabRadio = "Радио [PRO 💎]",
         TabSettings = "Настройки",
         KeySection = "🔑 Система ключей (Активация PRO)",
@@ -85,11 +90,12 @@ local Locales = {
         ThemeLabel = "Выбор темы оформления"
     },
     UA = {
-        Title = "🔥 Montano Hub v1.0 [Official Release] 🚀",
+        Title = "🔥 Montano Hub v1.1.0 [Release Edition] 🚀",
         TabHome = "Головна",
         TabCombat = "Бій [PRO 💎]",
         TabVisuals = "Візуал",
         TabMovement = "Рух",
+        TabTeleport = "Телепорт [PRO 💎]",
         TabRadio = "Радіо [PRO 💎]",
         TabSettings = "Налаштування",
         KeySection = "🔑 Система ключів (Активація PRO)",
@@ -99,11 +105,12 @@ local Locales = {
         ThemeLabel = "Вибір теми оформлення"
     },
     EN = {
-        Title = "🔥 Montano Hub v1.0 [Official Release] 🚀",
+        Title = "🔥 Montano Hub v1.1.0 [Release Edition] 🚀",
         TabHome = "Home",
         TabCombat = "Combat [PRO 💎]",
         TabVisuals = "Visuals",
         TabMovement = "Movement",
+        TabTeleport = "Teleport [PRO 💎]",
         TabRadio = "Radio [PRO 💎]",
         TabSettings = "Settings",
         KeySection = "🔑 Key System (PRO Activation)",
@@ -118,7 +125,7 @@ local T = Locales[Settings.CurrentLang] or Locales.RU
 
 local Window = Rayfield:CreateWindow({
    Name = T.Title,
-   LoadingTitle = "Запуск Montano Hub...",
+   LoadingTitle = "Запуск Montano Hub v1.1.0...",
    LoadingSubtitle = "by Montano",
    ConfigurationSaving = { Enabled = false },
    KeySystem = false,
@@ -126,8 +133,8 @@ local Window = Rayfield:CreateWindow({
 })
 
 Rayfield:Notify({
-    Title = "🚀 Montano Hub v1.0",
-    Content = "Успешно запущен! Введите ключ в Настройках для PRO.",
+    Title = "🚀 Релиз Montano Hub v1.1.0",
+    Content = "Хуб успешно запущен! Удачного релиза!",
     Duration = 5,
     Image = 6023426915
 })
@@ -146,6 +153,15 @@ FOVCircle.Filled = false
 FOVCircle.Transparency = 0.7
 FOVCircle.NumSides = 32
 
+-- Крупная инфо-панель (FPS, Пинг, Время)
+local StatsText = Drawing.new("Text")
+StatsText.Size = 22
+StatsText.Center = false
+StatsText.Outline = true
+StatsText.Color = Color3.fromRGB(0, 255, 150)
+StatsText.Position = Vector2.new(20, 50)
+StatsText.Visible = Settings.ShowStatsUI
+
 local ESPVisuals = {}
 
 local function RemoveESP(player)
@@ -161,8 +177,18 @@ Players.PlayerRemoving:Connect(RemoveESP)
 
 -- ВКЛАДКА: HOME
 local HomeTab = Window:CreateTab(T.TabHome, 6023426915)
-HomeTab:CreateSection("🔥 Официальный релиз Montano Hub v1.0")
-HomeTab:CreateParagraph({Title = "Статус сборки", Content = "🛡️ Режим: Free (Доступны валхак, боксы и скорость)"})
+HomeTab:CreateSection("🔥 Официальный релиз v1.1.0")
+HomeTab:CreateParagraph({Title = "Версия и статус", Content = "🛡️ Версия: v1.1.0 [Release]\n⏳ Следующее обновление (v1.2): Сроки уточняются (скоро)"})
+
+HomeTab:CreateToggle({
+    Name = "📊 Крупная инфо-панель (FPS, Пинг, Время)",
+    CurrentValue = Settings.ShowStatsUI,
+    Callback = function(Value)
+        Settings.ShowStatsUI = Value
+        StatsText.Visible = Value
+    end
+})
+
 HomeTab:CreateButton({
     Name = "📋 Скопировать ссылку на Telegram",
     Callback = function()
@@ -171,7 +197,7 @@ HomeTab:CreateButton({
     end,
 })
 
--- ВКЛАДКА: COMBAT (PRO)
+-- ВКЛАДКА: COMBAT (PRO) - Анти-отдача теперь здесь
 local CombatTab = Window:CreateTab(T.TabCombat, 4483362458)
 CombatTab:CreateToggle({Name = "Включить Аимбот", CurrentValue = Settings.AimbotEnabled, Callback = function(Value)
     if Value and not _G.MontanoIsPro then
@@ -181,6 +207,16 @@ CombatTab:CreateToggle({Name = "Включить Аимбот", CurrentValue = S
     end
     Settings.AimbotEnabled = Value 
 end})
+CombatTab:CreateToggle({
+    Name = "🎯 Анти-отдача (Anti-Recoil) [В разработке 🛠️]",
+    CurrentValue = Settings.AntiRecoil,
+    Callback = function(Value)
+        Settings.AntiRecoil = Value
+        if Value then
+            Rayfield:Notify({Title = "🛠️ В разработке", Content = "Функция анти-отдачи пишется и скоро будет добавлена!", Duration = 4})
+        end
+    end
+})
 CombatTab:CreateToggle({Name = "Звук попадания (HitSound)", CurrentValue = Settings.HitSound, Callback = function(Value)
     if not _G.MontanoIsPro then Rayfield:Notify({Title = "🔒 PRO", Content = "Нужен PRO ключ!", Duration = 3}) return end
     Settings.HitSound = Value 
@@ -194,11 +230,46 @@ CombatTab:CreateDropdown({Name = "Тип наводки", Options = {"Плавн
     if Option[1]:find("Резкий") then Settings.AimType = "Snap" else Settings.AimType = "Smooth" end
 end})
 CombatTab:CreateSlider({Name = "Плавность наводки", Range = {1, 20}, Increment = 1, Suffix = " шаг", CurrentValue = Settings.Smoothness, Callback = function(Value) Settings.Smoothness = Value end})
+CombatTab:CreateSlider({Name = "Дистанция захвата аима [PRO 💎]", Range = {100, 9999}, Increment = 50, Suffix = " studs", CurrentValue = 1500, Callback = function(Value)
+    if not _G.MontanoIsPro then return end
+    Settings.AimMaxDistance = Value
+end})
 CombatTab:CreateSlider({Name = "Размер круга FOV", Range = {20, 400}, Increment = 5, Suffix = " px", CurrentValue = Settings.FOV, Callback = function(Value) Settings.FOV = Value; FOVCircle.Radius = Value end})
 CombatTab:CreateToggle({Name = "Эффект дыхания FOV", CurrentValue = Settings.FOVBreathe, Callback = function(Value) Settings.FOVBreathe = Value end})
 
--- ВКЛАДКА: VISUALS
+-- ВКЛАДКА: VISUALS - X-Ray теперь здесь
 local VisualsTab = Window:CreateTab(T.TabVisuals, 4483362458)
+VisualsTab:CreateToggle({
+    Name = "👁️ X-Ray (Прозрачная карта) [PRO 💎]",
+    CurrentValue = Settings.XRayEnabled,
+    Callback = function(Value)
+        if Value and not _G.MontanoIsPro then
+            Rayfield:Notify({Title = "🔒 PRO", Content = "Требуется PRO ключ в Настройках!", Duration = 4})
+            Settings.XRayEnabled = false
+            return
+        end
+        Settings.XRayEnabled = Value
+        for _, part in pairs(workspace:GetDescendants()) do
+            if part:IsA("BasePart") and not part:IsDescendantOf(Players.LocalPlayer.Character) then
+                if Value then
+                    if not part:FindFirstChild("OriginalTransparency") then
+                        local t = Instance.new("NumberValue")
+                        t.Name = "OriginalTransparency"
+                        t.Value = part.Transparency
+                        t.Parent = part
+                    end
+                    part.Transparency = 0.65
+                else
+                    local t = part:FindFirstChild("OriginalTransparency")
+                    if t then
+                        part.Transparency = t.Value
+                        t:Destroy()
+                    end
+                end
+            end
+        end
+    end
+})
 VisualsTab:CreateToggle({Name = "Валхак (Chams) [Free 🟢]", CurrentValue = Settings.Wallhack, Callback = function(Value) Settings.Wallhack = Value end})
 VisualsTab:CreateToggle({Name = "Боксы (ESP Box) [Free 🟢]", CurrentValue = Settings.ESPBoxes, Callback = function(Value) Settings.ESPBoxes = Value end})
 VisualsTab:CreateToggle({Name = "Линии (ESP Tracers) [PRO 💎]", CurrentValue = Settings.ESPTracers, Callback = function(Value)
@@ -214,7 +285,7 @@ VisualsTab:CreateToggle({Name = "Дистанция в метрах [PRO 💎]",
     Settings.ESPDistance = Value 
 end})
 VisualsTab:CreateToggle({Name = "Имена игроков (ESP Names) [PRO 💎]", CurrentValue = Settings.ESPNames, Callback = function(Value)
-    if Value and not _G.MontanoIsPro then Rayfield:Notify({Title = "🔒 PRO", Content = "Нужен PRO ключ!", Duration = 4}) Settings.ESPNames = false return end
+    if Value and not _G.MontanoIsPro then Rayfield:Notify({Title = "🔒 PRO", Content = "🔒 PRO", Content = "Нужен PRO ключ!", Duration = 4}) Settings.ESPNames = false return end
     Settings.ESPNames = Value 
 end})
 VisualsTab:CreateToggle({Name = "Скелет игроков (ESP Skeleton) [PRO 💎]", CurrentValue = Settings.ESPSkeleton, Callback = function(Value)
@@ -237,6 +308,64 @@ MovementTab:CreateToggle({Name = "Проход сквозь стены (Noclip) 
     if Value and not _G.MontanoIsPro then Rayfield:Notify({Title = "🔒 PRO", Content = "Нужен PRO ключ!", Duration = 4}) Settings.Noclip = false return end
     Settings.Noclip = Value 
 end})
+
+-- ВКЛАДКА: TELEPORT (PRO) 🚀
+local TeleportTab = Window:CreateTab(T.TabTeleport, 4483362458)
+TeleportTab:CreateSection("🎯 Безопасная телепортация к игрокам")
+
+local selectedTargetPlayer = nil
+
+local function GetPlayerNames()
+    local names = {}
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer then
+            table.insert(names, p.Name)
+        end
+    end
+    if #names == 0 then table.insert(names, "Нет игроков") end
+    return names
+end
+
+local PlayerDropdown = TeleportTab:CreateDropdown({
+    Name = "Выберите игрока",
+    Options = GetPlayerNames(),
+    CurrentOption = {"Нет игроков"},
+    Callback = function(Option)
+        selectedTargetPlayer = Option[1]
+    end
+})
+
+TeleportTab:CreateButton({
+    Name = "🔄 Обновить список игроков",
+    Callback = function()
+        pcall(function()
+            PlayerDropdown:Refresh(GetPlayerNames(), true)
+            Rayfield:Notify({Title = "Список обновлен", Content = "Актуальный список игроков загружен!", Duration = 2})
+        end)
+    end
+})
+
+TeleportTab:CreateButton({
+    Name = "⚡ Телепортироваться РЯДОМ с игроком",
+    Callback = function()
+        if not _G.MontanoIsPro then
+            Rayfield:Notify({Title = "🔒 PRO", Content = "Нужен PRO ключ в Настройках!", Duration = 4})
+            return
+        end
+        if not selectedTargetPlayer or selectedTargetPlayer == "Нет игроков" then
+            Rayfield:Notify({Title = "Ошибка", Content = "Игрок не выбран!", Duration = 3})
+            return
+        end
+        local target = Players:FindFirstChild(selectedTargetPlayer)
+        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local offset = target.Character.HumanoidRootPart.CFrame * CFrame.new(4, 3, 4)
+            LocalPlayer.Character.HumanoidRootPart.CFrame = offset
+            Rayfield:Notify({Title = "Успешно! ⚡", Content = "Телепорт рядом с " .. target.Name, Duration = 3})
+        else
+            Rayfield:Notify({Title = "Ошибка", Content = "Не удалось найти цель или игрок погиб!", Duration = 3})
+        end
+    end
+})
 
 -- ВКЛАДКА: RADIO (PRO)
 local MusicTab = Window:CreateTab(T.TabRadio, 4483362458)
@@ -283,11 +412,14 @@ SettingsTab:CreateDropdown({
 
 SettingsTab:CreateDropdown({
     Name = T.ThemeLabel,
-    Options = {"Фиолетовая (Amethyst 🟣)", "Темная (Default)", "Светлая (Light)", "Серая (Serenity)", "Синяя (DarkBlue)"},
+    Options = {"Фиолетовая (Amethyst 🟣)", "❄️ Скоро Новогодняя ёлка!", "Темная (Default)", "Светлая (Light)", "Серая (Serenity)", "Синяя (DarkBlue)"},
     CurrentOption = {"Фиолетовая (Amethyst 🟣)"},
     Callback = function(Option)
         local themeName = Option[1]
         if themeName:find("Фиолетовая") then Settings.CurrentTheme = "Amethyst"
+        elseif themeName:find("Новогодняя") then 
+            Settings.CurrentTheme = "Amethyst" -- Заглушка под фиолетовую, пока ждем зиму
+            Rayfield:Notify({Title = "🎄 Скоро!", Content = "Новогодняя тема уже на подходе к праздникам!", Duration = 4})
         elseif themeName:find("Светлая") then Settings.CurrentTheme = "Light"
         elseif themeName:find("Серая") then Settings.CurrentTheme = "Serenity"
         elseif themeName:find("Синяя") then Settings.CurrentTheme = "DarkBlue"
@@ -314,15 +446,19 @@ local function GetClosestTarget()
     local Closest = nil
     local MaxDist = Settings.FOV
     local ScreenCenter = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+    local maxAimDist = Settings.AimMaxDistance or 9999
 
     for _, v in pairs(Players:GetPlayers()) do
         if v ~= LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 then
             local Part = v.Character:FindFirstChild(Settings.TargetPart) or v.Character:FindFirstChild("HumanoidRootPart")
             if Part then
-                local ScreenPos, OnScreen = Camera:WorldToViewportPoint(Part.Position)
-                if OnScreen and IsVisible(Part) then
-                    local Dist = (Vector2.new(ScreenPos.X, ScreenPos.Y) - ScreenCenter).Magnitude
-                    if Dist < MaxDist then MaxDist = Dist; Closest = Part end
+                local distToPlayer = (Camera.CFrame.Position - Part.Position).Magnitude
+                if distToPlayer <= maxAimDist then
+                    local ScreenPos, OnScreen = Camera:WorldToViewportPoint(Part.Position)
+                    if OnScreen and IsVisible(Part) then
+                        local Dist = (Vector2.new(ScreenPos.X, ScreenPos.Y) - ScreenCenter).Magnitude
+                        if Dist < MaxDist then MaxDist = Dist; Closest = Part end
+                    end
                 end
             end
         end
@@ -332,8 +468,28 @@ end
 
 if _G.MontanoConnection then _G.MontanoConnection:Disconnect() end
 local lastTarget = nil
+local fpsTimer = 0
+local frameCount = 0
+local currentFPS = 60
 
-_G.MontanoConnection = RunService.RenderStepped:Connect(function()
+_G.MontanoConnection = RunService.RenderStepped:Connect(function(dt)
+    frameCount = frameCount + 1
+    fpsTimer = fpsTimer + dt
+    if fpsTimer >= 1 then
+        currentFPS = math.floor(frameCount / fpsTimer)
+        frameCount = 0
+        fpsTimer = 0
+    end
+
+    if Settings.ShowStatsUI then
+        local ping = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue() or 0)
+        local timeStr = os.date("%H:%M:%S")
+        StatsText.Visible = true
+        StatsText.Text = string.format("⚡ FPS: %d | 🏓 Ping: %d ms | ⏰ Time: %s", currentFPS, ping, timeStr)
+    else
+        StatsText.Visible = false
+    end
+
     if Settings.AimbotEnabled and Settings.ShowFOV and _G.MontanoIsPro then
         FOVCircle.Visible = true
         if Settings.FOVBreathe then
@@ -427,7 +583,6 @@ _G.MontanoConnection = RunService.RenderStepped:Connect(function()
                         local height = math.abs(headPos.Y - legPos.Y)
                         local width = height / 2
 
-                        -- Боксы (Free)
                         if Settings.ESPBoxes then
                             esp.Box.Visible = true
                             esp.Box.Size = Vector2.new(width, height)
@@ -436,7 +591,6 @@ _G.MontanoConnection = RunService.RenderStepped:Connect(function()
                             esp.Box.Visible = false
                         end
 
-                        -- Здоровье / HP (PRO)
                         if Settings.ESPHealth and _G.MontanoIsPro then
                             local healthPercent = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
                             local barHeight = height * healthPercent
@@ -454,7 +608,6 @@ _G.MontanoConnection = RunService.RenderStepped:Connect(function()
                             esp.HealthText.Visible = false
                         end
 
-                        -- Трейсеры (PRO)
                         if Settings.ESPTracers and _G.MontanoIsPro then
                             esp.Tracer.Visible = true
                             esp.Tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
@@ -463,7 +616,6 @@ _G.MontanoConnection = RunService.RenderStepped:Connect(function()
                             esp.Tracer.Visible = false
                         end
 
-                        -- Дистанция (PRO)
                         if Settings.ESPDistance and _G.MontanoIsPro and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                             local myRoot = LocalPlayer.Character.HumanoidRootPart
                             local distStuds = (myRoot.Position - rootPart.Position).Magnitude
@@ -476,7 +628,6 @@ _G.MontanoConnection = RunService.RenderStepped:Connect(function()
                             esp.DistanceText.Visible = false
                         end
 
-                        -- Имена (PRO)
                         if Settings.ESPNames and _G.MontanoIsPro then
                             esp.NameText.Visible = true
                             esp.NameText.Text = v.Name
@@ -485,7 +636,6 @@ _G.MontanoConnection = RunService.RenderStepped:Connect(function()
                             esp.NameText.Visible = false
                         end
 
-                        -- Скелет (PRO)
                         if Settings.ESPSkeleton and _G.MontanoIsPro and upperTorso and leftArm and rightArm and leftLeg and rightLeg then
                             local tPos = Camera:WorldToViewportPoint(upperTorso.Position)
                             local hPos = Camera:WorldToViewportPoint(head.Position)
@@ -508,7 +658,6 @@ _G.MontanoConnection = RunService.RenderStepped:Connect(function()
                     end
                 end
 
-                -- Chams (Free)
                 local Highlight = char:FindFirstChild("HubHighlight")
                 if Settings.Wallhack then
                     if not Highlight then
